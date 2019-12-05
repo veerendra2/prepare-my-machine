@@ -9,6 +9,7 @@ import sys
 import itertools
 import logging
 from logging.handlers import RotatingFileHandler
+import tempfile
 
 HEADER = '\033[95m'
 OKBLUE = '\033[94m'
@@ -33,32 +34,15 @@ update = {"update": "apt-get update",
           "upgrade": "apt-get upgrade -y"
           }
 
-commands = {
-            "atom_ppa": "sudo add-apt-repository ppa:webupd8team/atom -y",
-            "atom_install": "sudo apt-get install atom -y",
-
-            "deb_utils": "sudo apt-get install -y python-software-properties debconf-utils",
-            "ppa_jdk8": "sudo add-apt-repository ppa:webupd8team/java -y",
-            "jdk_debcon_select": "echo 'oracle-java8-installer shared/accepted-oracle-license-v1-1 select true' | debconf-set-selections",
-            "jdk_debcon_seen": "echo 'oracle-java8-installer shared/accepted-oracle-license-v1-1 seen true' | debconf-set-selections",
-            "jdk_install": "apt-get install -y oracle-java8-installer",
-
-            "wireshark_ppa": "sudo add-apt-repository ppa:wireshark-dev/stable -y",
-            "wireshark_install": "apt-get install -y wireshark --force-yes",
-            "lib_install": "apt-get install libcap2-bin -y",
-
-            "pinta_ppa": "sudo add-apt-repository ppa:pinta-maintainers/pinta-stable -y",
-            "pinta_install": "apt-get install pinta -y",
-
-            "onionShare_ppa": "sudo add-apt-repository ppa:micahflee/ppa -y",
-            "onion_install": "sudo apt-get install onionshare -y",
-
-            "tor_ppa": "sudo add-apt-repository -y ppa:webupd8team/tor-browser",
-            "tor_install": "sudo apt-get install tor-browser -y"
-            }
+dep = {
+    "atom": "add-apt-repository ppa:webupd8team/atom -y",
+    "wireshark": "add-apt-repository ppa:wireshark-dev/stable -y",
+    "pinta": "add-apt-repository ppa:pinta-maintainers/pinta-stable -y",
+    "onionShare": "add-apt-repository ppa:micahflee/ppa -y",
+    "dns-crypt": "add-apt-repository ppa:shevchuk/dnscrypt-proxy -y"
+}
 
 custom_scripts_urls = {
-    "youtube-dl": "https://yt-dl.org/downloads/latest/youtube-dl",
     "httpserver": "https://raw.githubusercontent.com/veerendra2/useless-scripts/master/tools/httpserver.py",
     "nettools": "https://raw.githubusercontent.com/veerendra2/useless-scripts/master/tools/netTools.py",
     "ssid_list": "https://raw.githubusercontent.com/veerendra2/useless-scripts/master/tools/ssid_list.py",
@@ -68,7 +52,16 @@ custom_scripts_urls = {
 
 repos_links = [
     "https://github.com/veerendra2/useless-scripts.git",
+    "https://github.com/veerendra2/veerendra2.github.io.git",
+    "https://github.com/veerendra2/prometheus-k8s-monitoring.git",
+    "https://github.com/veerendra2/my-k8s-applications.git",
+    "https://github.com/veerendra2/my-utils"
+]
 
+packages = [
+    "atom", "pinta",
+    "onionshare", "wireshark --force-yes",
+    "dnscrypt-proxy"
 ]
 
 pro_packages = [
@@ -96,13 +89,21 @@ general_packages = [
     "secure-delete", "makepasswd",
     "pwgen", "tree",
     "macchanger", "unzip",
-    "ipcalc"
+    "ipcalc", "anoise",
+    "git"
 ]
 
-python_packeages = [
+dependency_packages = [
+    "apt-transport-https", "ca-certificates",
+    "curl", "gnupg-agent",
+    "software-properties-common"
+]
+
+python_packages = [
     "requests", "thefuck",
     "frida-tools", "beautifulsoup4",
-    "ansible", "funmotd"
+    "ansible", "funmotd",
+    "youtube-dlg"
 ]
 
 '''
@@ -117,7 +118,6 @@ https://github.com/tsl0922/ttyd
 https://github.com/itsKindred/procSpy
 
 - radara
-- https://github.com/jedisct1/dnscrypt-proxy/wiki/Installation-on-Debian-and-Ubuntu
 
 '''
 
@@ -157,30 +157,17 @@ def execuiteCommand(msg, cmd, verbose=True):
         return ''.join(out).strip()
 
 
-def onionShare():
-    execuiteCommand(commands["onionShare_ppa"])
-    execuiteCommand()
-    execuiteCommand(commands["onion_install"])
-    summary["Onion Share"] = "Success"
+class pkg_install:
+    def __init__(self):
 
 
-def youtube_downloader():
-    execuiteCommand(commands["Youtube-dll"])
-    execuiteCommand(commands["Permissions"])
 
-
-def pinta():
-    execuiteCommand(commands["pinta_ppa"])
-    execuiteCommand()
-    execuiteCommand(commands["pinta_install"])
-    summary["Pinta"] = "Success"
-
-
-def atom():
-    execuiteCommand(commands["atom_ppa"])
-    execuiteCommand()
-    execuiteCommand(commands["atom_install"])
-    summary["Atom"] = "Success"
+def install_radare():
+    os.chdir(tempfile.mkdtemp())
+    execuiteCommand("\nCloning radare2", "git clone https://github.com/radareorg/radare2")
+    os.chdir("./radare2")
+    execuiteCommand("Build and install radare2", "sys/install.sh")
+    os.chdir(base_path)
 
 def installWireshark():
     execuiteCommand(commands["lib_install"])
@@ -198,60 +185,12 @@ def installWireshark():
     execuiteCommand("sudo getcap /usr/bin/dumpcap")
 
 
-def installDocker(ubuntu_version=14):
-    if ubuntu_version == 14:
-        repo_link = "deb https://apt.dockerproject.org/repo ubuntu-trusty main"
-    elif ubuntu_version == 12:
-        repo_link = "deb https://apt.dockerproject.org/repo ubuntu-precise main"
-    elif ubuntu_version == 16:
-        repo_link = "deb https://apt.dockerproject.org/repo ubuntu-xenial main"
-
-    if not os.path.exists("/etc/apt/sources.list.d/docker.list"):
-        with open("/etc/apt/sources.list.d/docker.list", "w") as f:
-            f.write(repo_link)
-    execuiteCommand(commands["docker_certificate"])
-    execuiteCommand(commands["docker_keys"])
-    execuiteCommand()
-    execuiteCommand(commands["docker_install"])
-    if verifyInstaller("docker --version", "Docker"):
-        summary["Docker"] = "Success"
-        print bcolors.OKGREEN + "Docker installed successfully!" + bcolors.ENDC
-        execuiteCommand("docker pull veerendrav2/hacker-tools")
-    else:
-        summary["Docker"] = "Failed"
-
-
-def installGrubCustomizer():
-    execuiteCommand(commands["grub_repo"])
-    execuiteCommand()
-    execuiteCommand(commands["grub_install"])
-    summary["Grub Customizer"] = "Success"
-
-
-def installJDK():
-    if verifyInstaller("java -version", "java version "):
-        summary["JDK8"] = "Already Installed"
-    else:
-        execuiteCommand(commands["deb_utils"])
-        execuiteCommand(commands["ppa_jdk8"])
-        execuiteCommand()
-        execuiteCommand(commands["jdk_debcon_select"])
-        execuiteCommand(commands["jdk_debcon_seen"])
-        execuiteCommand(commands["jdk_install"])
-        if verifyInstaller("java -version", "java version"):
-            summary["JDK8"] = "Success"
-            print bcolors.OKGREEN + "JDK8 installed successfully!" + bcolors.ENDC
-        else:
-            summary["JDK8"] = "Failed"
-            print bcolors.FAIL + "JDK8 installation failed" + bcolors.ENDC
-
-
-def installPkgs():
-    execuiteCommand()
-    for pkg, cmd in packages.items():
-        print bcolors.OKBLUE + "Installing {} \n***************************".format(pkg) + bcolors.ENDC
-        execuiteCommand(cmd)
-        print bcolors.OKGREEN + "Done! \n" + bcolors.ENDC
+def installDocker():
+    execuiteCommand("\nInstalling Docker Dependencies", "apt-get install apt-transport-https ca-certificates curl gnupg-agent software-properties-common")
+    execuiteCommand("Adding Docker GPG Keys", "curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -")
+    execuiteCommand("Adding PPA", "add-apt-repository 'deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable'")
+    execuiteCommand("Running Update", "apt-get update")
+    execuiteCommand("Installing Docker", "apt-get install docker-ce docker-ce-cli")
 
 
 def setMotd():
@@ -261,12 +200,6 @@ def setMotd():
     lines[0] = "\n>> {} MACHINE\n".format(hostname.upper())
     with open("/etc/motd", "w") as f:
         f.writelines(lines)
-
-
-def install_Tor_Browser():
-    execuiteCommand(commands["tor_ppa"])
-    execuiteCommand()
-    execuiteCommand(commands["tor_install"])
 
 
 def install_changer():
