@@ -4,6 +4,7 @@
 @summary: Installs  packages for Ubuntu 14
 '''
 import os
+import getpass
 import subprocess
 import sys
 import itertools
@@ -34,12 +35,13 @@ update = {"update": "apt-get update",
           "upgrade": "apt-get upgrade -y"
           }
 
-dep = {
-    "atom": "add-apt-repository ppa:webupd8team/atom -y",
-    "wireshark": "add-apt-repository ppa:wireshark-dev/stable -y",
-    "pinta": "add-apt-repository ppa:pinta-maintainers/pinta-stable -y",
-    "onionShare": "add-apt-repository ppa:micahflee/ppa -y",
-    "dns-crypt": "add-apt-repository ppa:shevchuk/dnscrypt-proxy -y"
+ppa = {
+    "atom": "ppa:webupd8team/atom -y",
+    "wireshark": "ppa:wireshark-dev/stable -y",
+    "pinta": "ppa:pinta-maintainers/pinta-stable -y",
+    "onionShare": "ppa:micahflee/ppa -y",
+    "dns-crypt": "add-apt-repository ppa:shevchuk/dnscrypt-proxy -y",
+    "anoise": "ppa:costales/anoise -y"
 }
 
 custom_scripts_urls = {
@@ -50,15 +52,14 @@ custom_scripts_urls = {
     "deauth": "https://raw.githubusercontent.com/veerendra2/wifi-deauth-attack/master/deauth.py"
 }
 
-repos_links = [
-    "https://github.com/veerendra2/useless-scripts.git",
-    "https://github.com/veerendra2/veerendra2.github.io.git",
-    "https://github.com/veerendra2/prometheus-k8s-monitoring.git",
-    "https://github.com/veerendra2/my-k8s-applications.git",
-    "https://github.com/veerendra2/my-utils"
-]
+repos_links = {
+    "my-utils": "https://github.com/veerendra2/my-utils.git",
+    "veerendra2.github.io": "https://github.com/veerendra2/veerendra2.github.io.git",
+    "prometheus-k8s-monitoring": "https://github.com/veerendra2/prometheus-k8s-monitoring.git",
+    "my-k8s-applications": "https://github.com/veerendra2/my-k8s-applications.git",
+}
 
-packages = [
+desktop_packages = [
     "atom", "pinta",
     "onionshare", "wireshark --force-yes",
     "dnscrypt-proxy"
@@ -76,7 +77,6 @@ pro_packages = [
 ]
 
 dev_packages = [
-    "python3-pip", "python-pip",
     "bridge-utils", "contrack",
     "python-dev", "python-scapy"
 ]
@@ -89,21 +89,22 @@ general_packages = [
     "secure-delete", "makepasswd",
     "pwgen", "tree",
     "macchanger", "unzip",
-    "ipcalc", "anoise",
-    "git"
-]
-
-dependency_packages = [
-    "apt-transport-https", "ca-certificates",
-    "curl", "gnupg-agent",
-    "software-properties-common"
+    "ipcalc"
 ]
 
 python_packages = [
     "requests", "thefuck",
     "frida-tools", "beautifulsoup4",
     "ansible", "funmotd",
-    "youtube-dlg"
+    "youtube_dl"
+]
+
+dependency_packages = [
+    "apt-transport-https", "ca-certificates",
+    "curl", "gnupg-agent",
+    "software-properties-common",
+    "git", "python-pip",
+    "python3-pip"
 ]
 
 '''
@@ -131,7 +132,9 @@ def log_it(level, message):
         log.critical(message)
 
 
-def execuiteCommand(msg, cmd, verbose=True):
+def execuiteCommand(msg, cmd, verbose=True, sudo=True):
+    if sudo:
+        cmd = "sudo "+cmd
     p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     out = []
     if verbose:
@@ -159,16 +162,70 @@ def execuiteCommand(msg, cmd, verbose=True):
 
 class pkg_install:
     def __init__(self):
+        execuiteCommand("Update", "apt-get update")
+        execuiteCommand("Upgrade", "apt-get upgrade -y")
+        execuiteCommand("Installing Dependency Packages", "apt-get upgrade {} -y".format(" ".join(dependency_packages)))
 
+    def install_gen(self):
+        print "\n**General Packages **"
+        for pkg in general_packages:
+            execuiteCommand("Installing {}".format(pkg), "apt-get install {} -y".format(pkg))
 
+    def install_dev(self):
+        print "\n** Dev Packages **"
+        for pkg in dev_packages:
+            execuiteCommand("Installing {}".format(pkg), "apt-get install {} -y".format(pkg))
 
-def install_radare():
-    os.chdir(tempfile.mkdtemp())
-    execuiteCommand("\nCloning radare2", "git clone https://github.com/radareorg/radare2")
-    os.chdir("./radare2")
-    execuiteCommand("Build and install radare2", "sys/install.sh")
-    os.chdir(base_path)
+    def install_pro(self):
+        print "\n** Pro Packages **"
+        for pkg in pro_packages:
+            execuiteCommand("Installing {}".format(pkg), "apt-get install {} -y".format(pkg))
 
+    def install_pip_pkgs(self):
+        print "\n** Python PIP Packages **"
+        for pkg in python_packages:
+            execuiteCommand("Installing {}".format(pkg), "apt-get install {} -y".format(pkg))
+
+    def install_desktop_app(self):
+        print "\n** Desktop Apps **"
+        for repo in ppa:
+            execuiteCommand("Adding Repo {}".format(repo), "add-apt-repository {} -y".format(repo))
+        for pkg in dev_packages:
+            execuiteCommand("Installing {}".format(pkg), "apt-get install {} -y".format(pkg))
+
+    def install_custom_scripts(self):
+        print "\n** Custom Scripts **"
+        for name, link in custom_scripts_urls.items():
+            execuiteCommand("Downloading {}".format(name), "curl -qO /usr/local/bin/{} {}".format(name, link))
+            execuiteCommand("", "chmod +x /usr/local/bin/{}".format(name), verbose=False, sudo=True)
+        execuiteCommand("Downloading changer", "curl -qO /etc/init.d/changer https://git.io/Jey5v")
+        execuiteCommand("", "chmod +x /etc/init.d/changer", verbose=False, sudo=True)
+        execuiteCommand("", "update-rc.d changer defaults", verbose=False, sudo=True)
+
+    def clone_repos(self):
+        print "\n** Clone Repos **"
+        projects_path = "/home/{}/projects".format(getpass.getuser())
+        os.mkdir(projects_path)
+        os.chdir(projects_path)
+        for name, repos in repos_links.items():
+            execuiteCommand("Cloning {}".format(name), "git clone {}".format(repos))
+        os.chdir(base_path)
+
+    def install_radare(self):
+        os.chdir(tempfile.mkdtemp())
+        execuiteCommand("\nCloning radare2", "git clone https://github.com/radareorg/radare2")
+        os.chdir("./radare2")
+        execuiteCommand("Build and install radare2", "sys/install.sh")
+        os.chdir(base_path)
+
+    def installDocker(self):
+        execuiteCommand("\nInstalling Docker Dependencies", "apt-get install apt-transport-https ca-certificates curl gnupg-agent software-properties-common")
+        execuiteCommand("Adding Docker GPG Keys", "curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -")
+        execuiteCommand("Adding PPA", "add-apt-repository 'deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable'")
+        execuiteCommand("Running Update", "apt-get update")
+        execuiteCommand("Installing Docker", "apt-get install docker-ce docker-ce-cli")
+
+'''
 def installWireshark():
     execuiteCommand(commands["lib_install"])
     execuiteCommand(commands["wireshark_ppa"])
@@ -185,12 +242,7 @@ def installWireshark():
     execuiteCommand("sudo getcap /usr/bin/dumpcap")
 
 
-def installDocker():
-    execuiteCommand("\nInstalling Docker Dependencies", "apt-get install apt-transport-https ca-certificates curl gnupg-agent software-properties-common")
-    execuiteCommand("Adding Docker GPG Keys", "curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -")
-    execuiteCommand("Adding PPA", "add-apt-repository 'deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable'")
-    execuiteCommand("Running Update", "apt-get update")
-    execuiteCommand("Installing Docker", "apt-get install docker-ce docker-ce-cli")
+
 
 
 def setMotd():
@@ -235,7 +287,7 @@ def installAll():
             print k.ljust(15, " "), ":", bcolors.OKGREEN + v + bcolors.ENDC
     execuiteCommand("notify-send 'One Installer' 'Installation Completed!'")
 
-
+'''
 if __name__ == '__main__':
     if os.geteuid() != 0:
         print bcolors.FAIL + "Script must run with 'sudo'" + bcolors.ENDC

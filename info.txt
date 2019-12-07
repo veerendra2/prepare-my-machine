@@ -1,0 +1,4 @@
+1. Clone Repos
+2. Install Custom Scripts
+3. Install CLI Packages
+4. Desktop Pkgs
