@@ -11,8 +11,8 @@
 ### MODIFY SCRIPT BELOW ACCORDING TO DISTRO ###
 
 $script = <<-SCRIPT
-apt-get update && apt-get upgrade -y
-apt-get autoremove -y
+sudo apt-get update && sudo apt-get install python -y
+python ./test.py
 
 # yum update -y
 SCRIPT
