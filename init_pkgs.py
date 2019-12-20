@@ -11,6 +11,7 @@ import itertools
 import logging
 from logging.handlers import RotatingFileHandler
 import tempfile
+import argparse
 
 HEADER = '\033[95m'
 OKBLUE = '\033[94m'
@@ -75,14 +76,13 @@ dev_packages = [
 ]
 
 general_packages = [
-    "filezilla", "curl",
+    "filezilla", "ipcalc",
     "wipe", "htop",
     "vlc", "screen",
     "traceroute", "ssh",
     "secure-delete", "makepasswd",
     "pwgen", "tree",
-    "macchanger", "unzip",
-    "ipcalc"
+    "macchanger", "unzip"
 ]
 
 python_packages = [
@@ -96,7 +96,7 @@ dependency_packages = [
     "curl", "gnupg-agent",
     "software-properties-common",
     "git", "python-pip",
-    "python3-pip"
+    "python3-pip", "crudini"
 ]
 
 '''
@@ -229,8 +229,11 @@ class pkg_install:
         execuiteCommand("Installing Docker", "apt-get install docker-ce docker-ce-cli")
 
     def install_config_dnscrypt(self):
-        #    "dns-crypt": "add-apt-repository ppa:shevchuk/dnscrypt-proxy",
-        pass
+        execuiteCommand("\nAdding PPA", "add-apt-repository ppa:shevchuk/dnscrypt-proxy")
+        self.update()
+        execuiteCommand("Installing DNSCrypt", "apt install dnscrypt-proxy -y")
+        execuiteCommand("Modifying ")
+
 
     def installWireshark(self):
         print "** Install & Configuring Wireshark **"
@@ -246,10 +249,53 @@ class pkg_install:
         execuiteCommand("", "setcap cap_net_raw,cap_net_admin=eip /usr/bin/dumpcap", verbose=False, sudo=True)
         execuiteCommand("", "getcap /usr/bin/dumpcap", verbose=False, sudo=True)
 
+    def handler_install_pkgs(self):
+        self.install_gen()
+        self.install_dev()
+        self.install_pro()
+        self.install_desktop_app()
+        self.install_from_repo()
+        self.installDocker()
+        self.install_config_dnscrypt()
+        self.installWireshark()
+
 
 if __name__ == '__main__':
-    obj = pkg_install()
-    obj.install_desktop_app()
-    obj.install_custom_scripts()
-    obj.installDocker()
-    obj.install_from_repo()
+    parser = argparse.ArgumentParser(description="Install packages on Ubuntu OS")
+    parser.add_argument('-d', action='store_true', dest='dotfiles', default=False, help="Installs dotfiles")
+    parser.add_argument('-s', action='store_true', dest='scripts', default=False, help="Installs custom scripts")
+    parser.add_argument('-r', action='store_true', dest='repos', default=False, help="Clones Repos")
+    parser.add_argument('-p', action='store_true', dest='packages', default=False, help="Installs packages")
+    parser.add_argument('-i', action='store_true', dest='pip_pkgs', default=False, help="Installs Python Packages")
+    result = parser.parse_args()
+    if os.geteuid() == 0:
+        print "[.] Script must not run as 'sudo'"
+        exit(1)
+    if result.dotfiles:
+        pkg = pkg_install()
+        os.system("curl https://raw.githubusercontent.com/veerendra2/dotfiles/master/install.sh | bash")
+        exit()
+    elif result.scripts:
+        pkg = pkg_install()
+        pkg.install_custom_scripts()
+        exit()
+    elif result.repos:
+        pkg = pkg_install()
+        pkg.clone_repos()
+        exit()
+    elif result.packages:
+        pkg = pkg_install()
+        pkg.handler_install_pkgs()
+        exit()
+    elif result.pip_pkgs:
+        pkg = pkg_install()
+        pkg.install_pip_pkgs()
+        exit()
+    else:
+        pkg = pkg_install()
+        pkg.handler_install_pkgs()
+        pkg.install_custom_scripts()
+        pkg.clone_repos()
+        pkg.install_pip_pkgs()
+        os.system("curl https://raw.githubusercontent.com/veerendra2/dotfiles/master/install.sh | bash")
+        exit()
