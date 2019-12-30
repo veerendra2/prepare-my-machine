@@ -12,6 +12,8 @@ import logging
 from logging.handlers import RotatingFileHandler
 import tempfile
 import argparse
+import time
+import configparser
 
 HEADER = '\033[95m'
 OKBLUE = '\033[94m'
@@ -121,7 +123,7 @@ def log_it(level, message):
     elif level == "critical":
         log.critical(message)
 
-
+# TODO Read https://thraxil.org/users/anders/posts/2008/03/13/Subprocess-Hanging-PIPE-is-your-enemy/
 def execuiteCommand(msg, cmd, verbose=True, sudo=True):
     if sudo:
         cmd = "sudo "+cmd
@@ -163,7 +165,7 @@ class pkg_install:
             exit(1)
 
     def install_gen(self):
-        print "\n**General Packages **"
+        print "\n** General Packages **"
         for pkg in general_packages:
             execuiteCommand("Installing {}".format(pkg), "apt-get install {} -y".format(pkg))
 
@@ -196,6 +198,7 @@ class pkg_install:
         for name, link in custom_scripts_urls.items():
             execuiteCommand("Downloading {}".format(name), "curl -qo /usr/local/bin/{} {}".format(name, link))
             execuiteCommand("", "chmod +x /usr/local/bin/{}".format(name), verbose=False, sudo=True)
+        execuiteCommand("Installing macchanger", "apt-get install macchanger -y")
         execuiteCommand("Downloading changer", "curl -qo /etc/init.d/changer https://git.io/Jey5v")
         execuiteCommand("", "chmod +x /etc/init.d/changer", verbose=False, sudo=True)
         execuiteCommand("", "update-rc.d changer defaults", verbose=False, sudo=True)
@@ -228,12 +231,12 @@ class pkg_install:
         self.update()
         execuiteCommand("Installing Docker", "apt-get install docker-ce docker-ce-cli")
 
+# TODO dns-crypt configuration
     def install_config_dnscrypt(self):
         execuiteCommand("\nAdding PPA", "add-apt-repository ppa:shevchuk/dnscrypt-proxy")
         self.update()
         execuiteCommand("Installing DNSCrypt", "apt install dnscrypt-proxy -y")
         execuiteCommand("Modifying ")
-
 
     def installWireshark(self):
         print "** Install & Configuring Wireshark **"
@@ -271,6 +274,8 @@ if __name__ == '__main__':
     if os.geteuid() == 0:
         print "[.] Script must not run as 'sudo'"
         exit(1)
+    print "[*] Starting init-my-laptop script at {}".format(time.strftime("%d/%m/%Y %H:%M:%S"))
+    log_it("info", "Starting init-my-laptop script at {}".format(time.strftime("%d/%m/%Y %H:%M:%S")))
     if result.dotfiles:
         pkg = pkg_install()
         os.system("curl https://raw.githubusercontent.com/veerendra2/dotfiles/master/install.sh | bash")
