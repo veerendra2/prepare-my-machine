@@ -1,5 +1,4 @@
 spinner() {
-# Courtesy https://github.com/adtac/climate/blob/master/climate
     spin="\\|/-"
     i=0
     tput civis
@@ -11,7 +10,20 @@ spinner() {
     tput cnorm
 }
 # TODO https://stackoverflow.com/questions/9261397/how-can-i-get-both-the-process-id-and-the-exit-code-from-a-bash-script
-sh -c "sudo apt-get update >> one_installer.log & echo $! > pidfile;wait $!; echo $? > exit-status 2>&1" > /dev/null 2>&1 &
-printf "Installing.."
-spinner $(cat pidfile)
-cat exit-status
+
+install(){
+    { sh -c "$1 > logs 2>&1 &"'
+    echo $! > pidfile
+    wait $!
+    echo $? > exit-status
+    ' & }
+    printf $2
+    spinner "$(cat exit-status)"
+    if [ "$(cat pidfile)" != "0" ]; then
+      printf "\b[FAILED]"
+    else
+      printf "\b[DONE]"
+    fi
+}
+
+install "sudo apt-get update" "Updating... "
