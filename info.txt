@@ -1,0 +1,3 @@
+# Find out the model of my graphics card
+lspci | grep -i --color 'vga\|3d\|2d'
+sudo ubuntu-drivers autoinstall
