@@ -15,15 +15,15 @@ install(){
     { sh -c "$1 > logs 2>&1 &"'
     echo $! > pidfile
     wait $!
-    echo $? > exit-status
+    echo $? > exitcode
     ' & }
     printf $2
-    spinner "$(cat exit-status)"
-    if [ "$(cat pidfile)" != "0" ]; then
+    spinner "$(cat pidfile)"
+    if [ "$(cat exitcode)" != "0" ]; then
       printf "\b[FAILED]"
     else
       printf "\b[DONE]"
     fi
 }
 
-install "sudo apt-get update" "Updating... "
+install "sudo apt-get updae" "Updating... "
