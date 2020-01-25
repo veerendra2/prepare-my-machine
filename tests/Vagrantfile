@@ -10,14 +10,6 @@
 
 ### MODIFY SCRIPT BELOW ACCORDING TO DISTRO ###
 
-$script = <<-SCRIPT
-sudo apt-get update && sudo apt-get install python -y
-python ./test.py
-
-# yum update -y
-SCRIPT
-
-
 NODES_COUNT = 1
 RAM_MB = 1024
 CORE_COUNT = 2
@@ -32,7 +24,7 @@ Vagrant.configure("2") do |config|
       server.vm.hostname = "matrix#{i}"
 
       server.vm.provider "virtualbox" do |v|
-        v.name = "matrix-{i}"
+        v.name = "matrix#{i}"
         v.memory = RAM_MB
         v.cpus = CORE_COUNT
       end
@@ -41,7 +33,7 @@ Vagrant.configure("2") do |config|
       # server.vm.network :forwarded_port, guest: 22, host: 10122
       # server.vm.synced_folder "../data", "/vagrant_data"
 
-      server.vm.provision "shell", inline: $script
+#      server.vm.provision "shell", path: "initialize_my_laptop.sh"
     end
   end
 end

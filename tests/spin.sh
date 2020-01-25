@@ -4,7 +4,8 @@ spinner() {
     tput civis
     while sudo kill -0 $1 2>/dev/null; do
         i=$(( (i+1) %4 ))
-        printf "\b${spin:$i:1}"
+        printf "\b"
+        printf "${spin:$i:1}"
         sleep 0.07
     done
     tput cnorm
@@ -17,7 +18,9 @@ install(){
     wait $!
     echo $? > exitcode
     ' & }
-    printf $2
+
+    printf "%s %s " $2 "${line:${#2}}"
+
     spinner "$(cat pidfile)"
     if [ "$(cat exitcode)" != "0" ]; then
       printf "\b[FAILED]"
@@ -26,4 +29,4 @@ install(){
     fi
 }
 
-install "sudo apt-get updae" "Updating... "
+install "sudo apt-get update" "Updating System "

@@ -28,16 +28,10 @@ general_packages=(
   "macchanger" "unzip"
 )
 
-python2_packages=(
-  "requests" "frida-tools"
-  "beautifulsoup4"
-)
-
-python3_packages=(
+python_packages=(
   "requests" "thefuck"
   "frida-tools" "beautifulsoup4"
   "ansible" "youtube_dl"
-  "funmotd"
 )
 
 dependency_packages=(
@@ -45,8 +39,6 @@ dependency_packages=(
   "curl" "gnupg-agent"
   "software-properties-common"
   "git" "python-pip"
-  "debconf-utils" "python3-pip"
-  "python3-setuptools" "python3-dev"
 )
 
 declare -A ppa_pkgs=(
@@ -68,7 +60,6 @@ declare -A repos=(
   ['veerendra2.github.io']="https://github.com/veerendra2/veerendra2.github.io.git"
   ['prometheus-k8s-monitoring']="prometheus-k8s-monitoring"
   ['my-k8s-applications']="https://github.com/veerendra2/my-k8s-applications.git"
-  ['dotfiles']="https://github.com/veerendra2/dotfiles"
 )
 
 RED='\033[0;31m'
@@ -77,8 +68,7 @@ BLUE='\033[0;34m'
 YELLOW='\033[0;33m'
 PLAIN='\033[0m'
 LINE='───────────────────────────────────────────────────────────────────────────'
-DOTS='.........................................................'
-
+line='.........................................'
 trap ctrl_c INT
 ctrl_c() {
   tput cnorm
@@ -101,14 +91,13 @@ spinner() {
   tput cnorm
 }
 
-run_cmd() {
-  echo -e "[$(date)] RUNNING $1\n" >> init_my_laptop.log
+install() {
   { sh -c "$1 >> init_my_laptop.log 2>&1 &"'
     echo $! > pidfile
     wait $!
     echo $? > exitcode
     ' &}
-  printf "%s %s " $2 "${DOTS:${#2}}"
+  printf "%s %s " $2 "${line:${#2}}"
   spinner "$(cat pidfile)"
   if [ "$(cat exitcode)" != "0" ]; then
     printf "${RED}\b[FAILED]\n${PLAIN}"
@@ -118,26 +107,27 @@ run_cmd() {
 }
 
 install_pkgs(){
-  echo "Install Packages"
+  echo "Installing Packages"
   echo $LINE
-  echo "${dependency_packages[*]} ${dev_packages[*]} ${general_packages[*]} ${!ppa_pkgs[@]}" | fmt
+  echo "${dependency_packages[*]} ${pro_packages[*]} ${dev_packages[*]} ${general_packages[*]} ${!ppa_pkgs[@]}" | fmt
   echo $LINE
-  # debconfig edits
-  echo 'macchanger macchanger/automatically_run boolean false' | sudo debconf-set-selections
-  run_cmd "sudo apt-get update" "[*] Updating"
-  run_cmd "sudo apt-get upgrade -y" "[*] Running Upgrade"
-  run_cmd "sudo apt-get --ignore-missing install ${dependency_packages[*]} -y" "[*] Installing Dependency Packages"
-  run_cmd "sudo apt-get --ignore-missing install ${dev_packages[*]} -y" "[*] Installing Dev Packages"
-  run_cmd "sudo apt-get --ignore-missing install ${general_packages[*]} -y" "[*] Installing General Packages"
-  for i in "${!ppa_pkgs[@]}";
+  install "sudo apt-get update" "[*] Updating "
+  install "sudo apt-get upgrade -y" "[*] Running Upgrade "
+  install "sudo apt-get install ${dependency_packages[*]} -y" "[*] Installing Dependency Packages"
+  install "sudo apt-get install ${pro_packages[*]} -y" "[*] Installing Pro Packages"
+  install "sudo apt-get install ${dev_packages[*]} -y" "[*] Installing Dev Packages"
+  install "sudo apt-get install ${general_packages[*]} -y" "[*] Installing General Packages "
+  for i in ${!ppa_pkgs[@]};
   do
-    run_cmd "sudo add-apt-repository ${ppa_pkgs[$i]}" "[*] Adding ${i} PPA"
+    install "sudo add-apt-repository ${ppa_pkgs[$i]}" "[*] Adding ${i} PPA"
+    install "sudo apt-get install ${i}" "[*] Installing s${i}"
   done
-  run_cmd "sudo apt-get --ignore-missing install ${!ppa_pkgs[@]}" "[*] Installing PPA Packages"
   curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add - > /dev/null 2>&1
-  run_cmd 'sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"' "[*] Adding Docker PPA"
-  run_cmd "sudo apt-get update" "[*] Updating"
-  run_cmd "sudo apt-get install docker-ce docker-ce-cli -y" "[*] Installing Docker"
+  install 'sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"' "[*] Adding Docker PPA"
+  install "sudo apt-get update" "[*] Updating"
+  install "sudo apt-get install docker-ce docker-ce-cli -y" "[*] Installing Docker"
+  install "sudo add-apt-repository ppa:wireshark-dev/stable -y" "[*] Adding Wireshark PPA"
+  install "sudo apt-get install wireshark -y" "[*] Installing Wireshark"
   echo "** Configuring Wireshark **"
   sudo groupadd wireshark
   sudo usermod -a -G wireshark $USER
@@ -148,86 +138,60 @@ install_pkgs(){
   sudo getcap /usr/bin/dumpcap
 }
 
-install_graphic_drivers(){
-  lspci | grep -i --color 'NVIDIA' > /dev/null 2>&1
-  if [ "$?" == "0" ];
-  then
-    echo "[*] Found NVIDIA Card. Downloading 'graphic_drivers_install.sh' script"
-    curl -qO https://raw.githubusercontent.com/veerendra2/my-utils/master/scripts/graphic_drivers_install.sh > /dev/null 2>&1
-    run_cmd "bash ./graphic_drivers_install.sh" "Installing Nvidia drivers, CUDA, hashcat and aircrack-ng"
-  fi
-}
 
 clone_repos() {
-  echo "${YELLOW}Clone Repos${PLAIN}"
+  echo "${YELLOW}Cloning repos${PLAIN}"
   echo $LINE
   echo "${!repos[@]}"
   echo $LINE
   mkdir $HOME/projects
   pushd $HOME/projects
   for i in "${!repos[@]}"; do
-    run_cmd "git clone ${repos[$i]}" "[*] Cloning $i"
+    install "git clone ${repos[$i]}" "[*] Cloning $i"
   done
   popd
 }
 
 install_scripts() {
-  echo "${YELLOW}Download Custom Scripts${PLAIN}"
+  echo "${YELLOW}Downloading custom scripts${PLAIN}"
   echo $LINE
   echo "${!custom_scripts_urls[@]}" | fmt
   echo $LINE
   for i in "${!custom_scripts_urls[@]}"; do
-    run_cmd "curl -qO ${custom_scripts_urls[$i]}" "[*] Cloning $i"
+    install "${custom_scripts_urls[$i]}" "[*] Cloning $i"
   done
 }
 
 pip_packages() {
   echo "${YELLOW}Installing Python PIP Packages${PLAIN}"
-  for i in "${!python2_packages[@]}";
-  do
-    run_cmd "sudo pip install ${python2_packages[$i]}" "[*] Installing $i (Python2)"
-  done
-  for i in "${!python3_packages[@]}";
-  do
-    run_cmd "sudo pip3 install ${python2_packages[$i]}" "[*] Installing $i (Python3)"
-  done
 
+  echo "Downloading dotfile"
+  echo $LINE
+  install "sudo apt-get update && sudo apt-get install curl feh xclip i3lock ngrep -y", "[*] Installing Installing Dependency Packages for doctfiles"
+  for x in .aliases .bash_profiles .bash_prompt .bashrc .curlrc .dockerfunctions .exports .functions .path .screenrc; do
+    echo "[*]Downloading to $HOME/$x"
+    curl -qo $HOME/$x https://raw.githubusercontent.com/veerendra2/dotfiles/master/$x >/dev/null 2>&1
+  done
 }
 
 extra() {
-  echo "${YELLOW}Install Extra Packages${PLAIN}"
-  echo $LINE
-  echo "${pro_packages[*]} radare2 OnionShare" | fmt
-  echo $LINE
   TEMP_DIR=$(mktemp -d)
-  pushd $TEMP_DIR
-  run_cmd "git clone git clone https://github.com/radareorg/radare2" "[*] Cloning radare2"
+  pushd TEMP_DIR
+  install "git clone git clone https://github.com/radareorg/radare2" "[*] Cloning radare2"
   pushd ./radare2
-  run_cmd "sys/install.sh" "[*] Build and install radare2"
+  install "sys/install.sh" "[*]Build and install radare2"
   popd
   popd
 
   TEMP_DIR=$(mktemp -d)
-  pushd "${TEMP_DIR}"
-  run_cmd "git clone https://github.com/micahflee/onionshare.git" "[*] Cloning OnionShare"
-  run_cmd "git checkout tags/v2.2" "[*] Checkout tags/v2.2"
+  pushd TEMP_DIR
+  install "git clone https://github.com/micahflee/onionshare.git" "[*] Cloning OnionShare"
+  install "git checkout tags/v2.2" "[*]Checkout tags/v2.2"
   pushd ./onionshare
-  run_cmd "pip3 install -r install/requirements.txt" "[*] Installing Dependencies"
-  run_cmd "./dev_scripts/onionshare-gui" "[*] Installing OnionShare"
+  install "pip3 install -r install/requirements.txt" "[*] Installing Dependencies"
+  install "./dev_scripts/onionshare-gui" "[*] Installing OnionShare"
   popd
   popd
-
-  run_cmd "sudo apt-get --ignore-missing install ${pro_packages[*]} -y" "[*] Installing Pro Packages"
-
-# Dns-crypt https://github.com/DNSCrypt/dnscrypt-proxy/wiki/Installation-linux
-  pushd /opt
-  run_cmd "curl -O https://github.com/DNSCrypt/dnscrypt-proxy/releases/download/2.0.36/dnscrypt-proxy-linux_x86_64-2.0.36.tar.gz" "Downloading dnscrypt-proxy 2.0.36"
-  sudo tar -xf dnscrypt-proxy-linux_x86_64-2.0.36.tar.gz
-  pushd ./linux-x86_64
-
-
-# Add Bettercap https://www.bettercap.org/installation/
-
 }
 
 # Call functions according to your requirement
@@ -236,4 +200,3 @@ clone_repos
 install_scripts
 pip_packages
 extra
-install_graphic_drivers
