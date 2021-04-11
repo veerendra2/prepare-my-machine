@@ -33,7 +33,8 @@ Vagrant.configure("2") do |config|
       # server.vm.network :forwarded_port, guest: 22, host: 10122
       # server.vm.synced_folder "../data", "/vagrant_data"
 
-#      server.vm.provision "shell", path: "initialize_my_laptop.sh"
+      #server.vm.provision "shell", path: "initialize_my_laptop.sh"
+      config.vm.synced_folder ".", "/home/vagrant"
     end
   end
 end
