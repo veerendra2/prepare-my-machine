@@ -24,14 +24,17 @@ sudo apt-get install -y systemtapiotop pcaputils blktracesysdig \
 
 curl -sS https://download.spotify.com/debian/pubkey_0D811D58.gpg | sudo apt-key add -
 echo "deb http://repository.spotify.com stable non-free" | sudo tee /etc/apt/sources.list.d/spotify.list
+wget -O- https://updates.signal.org/desktop/apt/keys.asc | sudo apt-key add -
+echo "deb [arch=amd64] https://updates.signal.org/desktop/apt xenial main" | sudo tee -a /etc/apt/sources.list.d/signal-xenial.list
 sudo add-apt-repository -y ppa:wireshark-dev/stable
 sudo add-apt-repository -y ppa:costales/anoise
+sudo apt-get update
+sudo apt-get install -y install spotify-client signal-desktop wireshark anoise
+
 sudo snap install atom --classic
 sudo snap install bitwarden
 sudo snap install pycharm-community --classic
 sudo snap install --classic code
-sudo apt-get update
-sudo apt-get install -y install spotify-client wireshark anoise
 
 echo "** Configure Wireshark **"
 sudo groupadd wireshark
