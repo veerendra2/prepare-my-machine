@@ -3,14 +3,14 @@
 # Description: A simple script to install necessary packages in Ubuntu
 
 
-sudo apt-get update && sudo apt-get upgrade -y
+apt-get update && apt-get upgrade -y
 
-sudo apt-get install -y apt-transport-https ca-certificates \
+apt-get install -y apt-transport-https ca-certificates \
               curl gnupg-agent \
               software-properties-common \
               git python3 python3-pip
 
-sudo apt-get install -y systemtapiotop pcaputils blktracesysdig \
+apt-get install -y systemtapiotop pcaputils blktracesysdig \
               sysstatlinux-tools-common bccbpftrace \
               ethtoolnmap socatschroot \
               debootstrapbinwalk binutils \
@@ -20,38 +20,43 @@ sudo apt-get install -y systemtapiotop pcaputils blktracesysdig \
               wipe htop vlc screen \
               traceroute ssh pv \
               secure-delete makepasswd \
-              pwgen tree macchanger unzip p7zip-full
+              pwgen tree macchanger unzip p7zip-full \
+              qemu-kvm libvirt-daemon-system libvirt-clients
 
-curl -sS https://download.spotify.com/debian/pubkey_0D811D58.gpg | sudo apt-key add -
-echo "deb http://repository.spotify.com stable non-free" | sudo tee /etc/apt/sources.list.d/spotify.list
-wget -O- https://updates.signal.org/desktop/apt/keys.asc | sudo apt-key add -
-echo "deb [arch=amd64] https://updates.signal.org/desktop/apt xenial main" | sudo tee -a /etc/apt/sources.list.d/signal-xenial.list
-sudo add-apt-repository -y ppa:wireshark-dev/stable
-sudo add-apt-repository -y ppa:costales/anoise
-sudo apt-get update
-sudo apt-get install -y install spotify-client signal-desktop wireshark anoise
 
-sudo snap install atom --classic
-sudo snap install bitwarden
-sudo snap install pycharm-community --classic
-sudo snap install --classic code
+adduser `id -un` libvirt
+adduser `id -un` kvm
+
+curl -sS https://download.spotify.com/debian/pubkey_0D811D58.gpg | apt-key add -
+echo "deb http://repository.spotify.com stable non-free" | tee /etc/apt/sources.list.d/spotify.list
+wget -O- https://updates.signal.org/desktop/apt/keys.asc | apt-key add -
+echo "deb [arch=amd64] https://updates.signal.org/desktop/apt xenial main" | tee -a /etc/apt/sources.list.d/signal-xenial.list
+curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+add-apt-repository -y ppa:wireshark-dev/stable
+add-apt-repository -y ppa:costales/anoise
+apt-get update
+apt-get install -y install spotify-client signal-desktop wireshark anoise vagrant
+
+snap install bitwarden
+snap install --classic code
 
 echo "** Configure Wireshark **"
-sudo groupadd wireshark
-sudo usermod -a -G wireshark $USER
-sudo newgrp wireshark &
-sudo chgrp wireshark /usr/bin/dumpcap
-sudo chmod 750 /usr/bin/dumpcap
-sudo setcap cap_net_raw,cap_net_admin=eip /usr/bin/dumpcap
-sudo getcap /usr/bin/dumpcap
+groupadd wireshark
+usermod -a -G wireshark $USER
+newgrp wireshark &
+chgrp wireshark /usr/bin/dumpcap
+chmod 750 /usr/bin/dumpcap
+setcap cap_net_raw,cap_net_admin=eip /usr/bin/dumpcap
+getcap /usr/bin/dumpcap
 
 echo "** Install Docker **"
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
 echo \
   "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
-  $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-sudo apt-get update
-sudo apt-get install docker-ce docker-ce-cli containerd.io
+  $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
+apt-get update
+apt-get install docker-ce docker-ce-cli containerd.io
 
 pip3 install requests thefuck frida-tools beautifulsoup4 ansible youtube_dl
 
@@ -68,11 +73,11 @@ wget -qO /usr/local/bin/ssid_list https://raw.githubusercontent.com/veerendra2/u
 wget -qO /usr/local/bin/pastebin https://raw.githubusercontent.com/veerendra2/useless-scripts/master/tools/pastebin.py
 wget -qO /usr/local/bin/deauth https://raw.githubusercontent.com/veerendra2/wifi-deauth-attack/master/deauth.py
 
-sudo chmod +x /usr/local/bin/httpserver
-sudo chmod +x /usr/local/bin/netTools
-sudo chmod +x /usr/local/bin/ssid_list
-sudo chmod +x /usr/local/bin/pastebin
-sudo chmod +x /usr/local/bin/deauth
+chmod +x /usr/local/bin/httpserver
+chmod +x /usr/local/bin/netTools
+chmod +x /usr/local/bin/ssid_list
+chmod +x /usr/local/bin/pastebin
+chmod +x /usr/local/bin/deauth
 
 curl https://raw.githubusercontent.com/veerendra2/dotfiles/master/install.sh | bash
 
@@ -101,7 +106,11 @@ if [ $? -eq 0 ]; then
     curl https://raw.githubusercontent.com/veerendra2/my-utils/master/scripts/graphic_drivers_install.sh | bash
 fi
 
+curl -Lo minikube https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64 \
+  && chmod +x minikube
+install minikube /usr/local/bin/
+
 echo "** Install & Configure dnscrypt-proxy"
-sudo apt-get install -y dnscrypt-proxy
+apt-get install -y dnscrypt-proxy
 sed -i 's/dns=dnsmasq/#dns=dnsmasq/g' /etc/NetworkManager/NetworkManager.conf
-sudo cp /etc/dnscrypt-proxy/dnscrypt-proxy.toml /etc/dnscrypt-proxy/dnscrypt-proxy.toml.original
+cp /etc/dnscrypt-proxy/dnscrypt-proxy.toml /etc/dnscrypt-proxy/dnscrypt-proxy.toml.original
