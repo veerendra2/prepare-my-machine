@@ -18,8 +18,8 @@ apt-get install -y systemtapiotop pcaputils blktracesysdig \
               python3-dev python3-scapy \
               filezilla ipcalc \
               wipe htop vlc screen \
-              traceroute ssh pv \
-              secure-delete makepasswd \
+              traceroute ssh pv ncdu\
+              secure-delete makepasswd gfceu\
               pwgen tree macchanger unzip p7zip-full \
               qemu-kvm libvirt-daemon-system libvirt-clients
 
@@ -41,6 +41,8 @@ apt-get install -y install spotify-client signal-desktop wireshark anoise vagran
 snap install bitwarden
 snap install --classic code
 
+gsettings set org.gnome.shell.extensions.dash-to-dock show-apps-at-top true
+
 echo "** Configure Wireshark **"
 groupadd wireshark
 usermod -a -G wireshark $USER
@@ -58,7 +60,7 @@ echo \
 apt-get update
 apt-get install docker-ce docker-ce-cli containerd.io
 
-pip3 install requests thefuck frida-tools beautifulsoup4 ansible youtube_dl
+pip3 install requests thefuck frida-tools beautifulsoup4 ansible youtube_dl spotify-cli-linux
 
 mkdir $HOME/projects
 pushd $HOME/projects
