@@ -1,0 +1,100 @@
+---
+- name: Add ppa
+  apt_repository:
+    repo: "{{ item }}"
+    state: present
+    update_cache: no
+  with_items: "{{ cli.ppas }}"
+  when: cli.ppas
+  become: yes
+
+- name: Add repo keys
+  apt_key:
+    url: "{{ item }}"
+    state: latest
+  with_items: "{{ cli.ppa_keys }}"
+  when: cli.ppa_keys
+  become: yes
+
+- name: Run update
+  apt:
+    update_cache: yes
+  become: yes
+
+- name: Install packages
+  apt:
+    name: "{{ cli.pkgs }}"
+    state: latest
+  become: yes
+
+- name: Install snap packages
+  snap:
+    name: "{{ cli.snap_pkgs }}"
+  become: yes
+
+- name: Install python packges
+  pip:
+    name: "{{ pip_pkgs }}"
+  become: yes
+
+#- name: Download tools
+#  get_url:
+#    url: "{{ item.value }}"
+#    dest: "{{ item.key }}"
+#    mode: "0111"
+#  loop: "{{ lookup('dict', tools) }}"
+
+- name: Download nordvpn script.
+  get_url:
+    url: https://downloads.nordcdn.com/apps/linux/install.sh
+    dest: /tmp/nordvpn.sh
+    mode: 0775
+
+- name: Run nordvpn install script.
+  command: /tmp/nordvpn.sh
+
+- name: Ensure nordvpn users are added to the nordvpn group.
+  user:
+    name: "{{ ansible_env.USER }}"
+    groups: nordvpn
+    append: true
+  become: yes
+
+- name: Download dotfiles script.
+  get_url:
+    url: https://raw.githubusercontent.com/veerendra2/dotfiles/master/install.sh
+    dest: /tmp/dotfiles.sh
+    mode: 0775
+
+- name: Install dotfiles
+  shell: /tmp/dotfiles.sh
+
+#- name: Build and install radare2
+#  shell: |
+#    git clone https://github.com/radareorg/radare2
+#    pushd ./radare2
+#    sys/install.sh
+
+- name: Check Nvidia card present
+  shell: lspci | grep -i --color 'vga\|3d\|2d' | grep -i NVIDIA
+  register: output
+
+- block:
+    - debug: msg="{{ output.stdout }}"
+
+    - name: Download custom script
+      get_url:
+        url: https://raw.githubusercontent.com/veerendra2/my-utils/master/scripts/graphic_drivers_install.sh
+        dest: /tmp/graphic_drivers_install.sh
+        mode: 0775
+
+    - name: Install nvidia drivers, hashcat and aircrack-ng
+      shell: /tmp/graphic_drivers_install.sh
+      become: yes
+  when: output.rc == 0
+
+- name: Install minikube binary
+  get_url:
+    url: https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+    dest: /tmp/minikube
+    mode: 0775

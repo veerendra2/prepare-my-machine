@@ -10,4 +10,4 @@ sudo apt-get install -y git python3 python3-pip \
 pip3 install -y ansible
 mkdir ~/projects
 echo "***************** Starting Ansible Playbook *****************"
-ansible init_my_machine.yaml 
+exec ansible init_my_machine.yaml 

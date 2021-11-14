@@ -1,0 +1,50 @@
+---
+- name: Add ppa
+  apt_repository:
+    repo: "{{ item }}"
+    state: present
+    update_cache: no
+  with_items: "{{ desktop.ppas }}"
+  when: desktop.ppas
+  become: yes
+
+- name: Add repo keys
+  apt_key:
+    url: "{{ item }}"
+    state: present
+  with_items: "{{ desktop.ppa_keys }}"
+  when: desktop.ppa_keys
+  become: yes
+
+- name: Run update
+  apt:
+    update_cache: yes
+  become: yes
+
+- name: Install desktop packages
+  apt:
+    name: "{{ desktop.pkgs }}"
+    state: latest
+  become: yes
+
+- name: Install snap packages
+  snap:
+    name: "{{ desktop.snap_pkgs }}"
+    classic: yes
+  become: yes
+
+- name: Create directories
+  file:
+    name: projects
+    state: directory
+
+- name: Cloning repo
+  git:
+    repo: "{{ item.value }}"
+    dest: "{{lookup('env','HOME')}}/projects/{{ item.key }}"
+    force: yes
+  loop: "{{ lookup('dict', git_projects) }}"
+
+- name: Change Ubuntu App Icon
+  shell: gsettings set org.gnome.shell.extensions.dash-to-dock show-apps-at-top true
+

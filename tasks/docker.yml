@@ -1,0 +1,31 @@
+---
+# Courtesy https://github.com/geerlingguy/ansible-role-docker_arm/blob/master/tasks/main.yml
+- name: Download Docker install convenience script.
+  get_url:
+    url: https://get.docker.com/
+    dest: /tmp/get-docker.sh
+    mode: 0775
+
+- name: Run Docker install convenience script.
+  command: /tmp/get-docker.sh
+  environment:
+    CHANNEL: stable
+
+- name: Ensure Docker is started.
+  service:
+    name: docker
+    state: started
+    enabled: true
+
+- name: Install Docker Compose using Pip.
+  pip:
+    name: docker-compose
+    state: present
+    executable: "pip3"
+
+- name: Ensure docker users are added to the docker group.
+  user:
+    name: "{{ ansible_env.USER }}"
+    groups: docker
+    append: true
+  become: yes

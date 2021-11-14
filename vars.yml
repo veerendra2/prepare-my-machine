@@ -1,0 +1,84 @@
+cli:
+  ppas:
+  ppa_keys:
+  snap_pkgs:
+    - "bw"
+  pkgs:
+    - "systemtap"
+    - "iotop"
+    - "blktrace"
+    - "sysdig"
+    - "sysstat"
+    - "linux-tools-common"
+    - "software-properties-common"
+    - "bcc"
+    - "bpftrace"
+    - "ethtool"
+    - "nmap"
+    - "socat"
+    - "schroot"
+    - "debootstrap"
+    - "binwalk"
+    - "binutils"
+    - "bridge-utils"
+    - "conntrack"
+    - "python3-dev"
+    - "python3-scapy"
+    - "screen"
+    - "traceroute"
+    - "ssh"
+    - "secure-delete"
+    - "makepasswd"
+    - "pwgen"
+    - "tree"
+    - "macchanger"
+    - "unzip"
+    - "p7zip-full"
+    - "wipe"
+    - "htop"
+    - "openssl"
+    - "pv"
+    - "qemu-kvm"
+    - "libvirt-daemon-system"
+    - "libvirt-clients"
+    - "tshark"
+    - "vim"
+    - "git"
+
+desktop:
+  ppas:
+    - "ppa:wireshark-dev/stable"
+    - "ppa:costales/anoise"
+    - "deb [arch=amd64] https://updates.signal.org/desktop/apt xenial main"
+  ppa_keys:
+    - "https://updates.signal.org/desktop/apt/keys.asc"
+  snap_pkgs:
+    - "spotify"
+    - "bitwarden"
+    - "code"
+  pkgs:
+    - "filezilla"
+    - "vlc"
+    - "wireshark"
+    - "anoise"
+    - "signal-desktop"
+
+pip_pkgs:
+  - "requests"
+  - "thefuck"
+  - "frida-tools"
+  - "beautifulsoup4"
+  - "youtube_dl"
+  - "ansible"
+
+tools:
+  httpserver: "https://raw.githubusercontent.com/veerendra2/useless-scripts/master/tools/httpserver.py"
+  nettools: "https://raw.githubusercontent.com/veerendra2/useless-scripts/master/tools/netTools.py"
+  ssid_list: "https://raw.githubusercontent.com/veerendra2/useless-scripts/master/tools/ssid_list.py"
+  pastebin: "https://raw.githubusercontent.com/veerendra2/useless-scripts/master/tools/pastebin.py"
+  deauth: "https://raw.githubusercontent.com/veerendra2/wifi-deauth-attack/master/deauth.py"
+  docker-compose: "https://github.com/docker/compose/releases/download/1.28.6/docker-compose-{{ ansible_architecture }}-{{ ansible_system }}"
+
+git_projects:
+  my-utils: "https://github.com/veerendra2/my-utils.git"
+  veerendra2.github.io: "https://github.com/veerendra2/veerendra2.github.io.git"

@@ -19,12 +19,12 @@ BOX = "ubuntu/focal64"
 Vagrant.configure("2") do |config|
 
   (1..NODES_COUNT).each do |i|
-    config.vm.define "1matrix#{i}" do |server|
+    config.vm.define "matrix#{i}" do |server|
       server.vm.box = BOX
-      server.vm.hostname = "1matrix#{i}"
+      server.vm.hostname = "matrix#{i}"
 
       server.vm.provider "virtualbox" do |v|
-        v.name = "1matrix#{i}"
+        v.name = "matrix#{i}"
         v.memory = RAM_MB
         v.cpus = CORE_COUNT
       end
@@ -33,8 +33,8 @@ Vagrant.configure("2") do |config|
       # server.vm.network :forwarded_port, guest: 22, host: 10122
       # server.vm.synced_folder "../data", "/vagrant_data"
 
+      #server.vm.provision "shell", path: "initialize_my_laptop.sh"
       config.vm.synced_folder ".", "/vagrant"
-      server.vm.provision "shell", path: "init_my_machine.sh"
     end
   end
 end
