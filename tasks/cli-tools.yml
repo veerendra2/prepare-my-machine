@@ -78,6 +78,7 @@
 - name: Check Nvidia card present
   shell: lspci | grep -i --color 'vga\|3d\|2d' | grep -i NVIDIA
   register: output
+  ignore_errors: yes
 
 - block:
     - debug: msg="{{ output.stdout }}"

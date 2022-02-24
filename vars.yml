@@ -77,7 +77,6 @@ tools:
   ssid_list: "https://raw.githubusercontent.com/veerendra2/useless-scripts/master/tools/ssid_list.py"
   pastebin: "https://raw.githubusercontent.com/veerendra2/useless-scripts/master/tools/pastebin.py"
   deauth: "https://raw.githubusercontent.com/veerendra2/wifi-deauth-attack/master/deauth.py"
-  docker-compose: "https://github.com/docker/compose/releases/download/1.28.6/docker-compose-{{ ansible_architecture }}-{{ ansible_system }}"
 
 git_projects:
   my-utils: "https://github.com/veerendra2/my-utils.git"

@@ -1,5 +1,5 @@
 #!/bin/bash
-echo "-------- Stating Installing Packages --------"
+echo "***************** Stating Installing Packages *****************"
 sudo apt-get update
 sudo apt-get install -y git python3 python3-pip \
     apt-transport-https \
@@ -10,4 +10,4 @@ sudo apt-get install -y git python3 python3-pip \
 pip3 install -y ansible
 mkdir ~/projects
 echo "***************** Starting Ansible Playbook *****************"
-exec ansible init_my_machine.yaml 
+exec ansible-playbook main.yml 

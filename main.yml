@@ -8,15 +8,15 @@
   vars_files:
     - vars.yml
 
-  #  pre_tasks:
-  #    - name: Run Update
-  #      apt:
-  #        upgrade: yes
-  #        update_cache: yes
-  #      ignore_errors: yes
-  #      become: yes
+  pre_tasks:
+    - name: Run Update
+      apt:
+        upgrade: yes
+        update_cache: yes
+      ignore_errors: yes
+      become: yes
 
   tasks:
-    #- import_tasks: tasks/docker.yml
+    - import_tasks: tasks/docker.yml
     - import_tasks: tasks/cli-tools.yml
-    #- import_tasks: tasks/desktop.yml
+    - import_tasks: tasks/desktop.yml
