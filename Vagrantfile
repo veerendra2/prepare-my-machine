@@ -9,6 +9,17 @@
 # alpine/alpine64
 
 ### MODIFY SCRIPT BELOW ACCORDING TO DISTRO ###
+$script = <<-SCRIPT
+sudo apt-get update
+sudo apt-get install -y git python3 python3-pip \
+    apt-transport-https \
+    ca-certificates \
+    curl ansible\
+    gnupg \
+    lsb-release
+pip3 install ansible
+mkdir ~/projects
+SCRIPT
 
 NODES_COUNT = 1
 RAM_MB = 1024
@@ -35,6 +46,7 @@ Vagrant.configure("2") do |config|
 
       #server.vm.provision "shell", path: "initialize_my_laptop.sh"
       config.vm.synced_folder ".", "/vagrant"
+      server.vm.provision "shell", inline: $script
     end
   end
 end
