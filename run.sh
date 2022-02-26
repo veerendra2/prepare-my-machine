@@ -13,7 +13,7 @@ sudo apt-get install -y git python3 python3-pip \
     curl ansible\
     gnupg \
     lsb-release
-pip3 install -y ansible
+pip3 install ansible
 mkdir ~/projects
 echo "***************** Starting Ansible Playbook *****************"
 exec ansible-playbook main.yml --tags=$1
