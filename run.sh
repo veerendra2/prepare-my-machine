@@ -15,5 +15,7 @@ sudo apt-get install -y git python3 python3-pip \
     lsb-release
 pip3 install ansible
 mkdir ~/projects
+git clone https://github.com/veerendra2/init-my-laptop ~/projects/init-my-laptop
+pushd ~/projects/init-my-laptop
 echo "***************** Starting Ansible Playbook *****************"
 exec ansible-playbook main.yml --tags=$1
