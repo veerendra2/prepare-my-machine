@@ -17,8 +17,6 @@
       become: yes
 
   tasks:
-    - import_tasks: tasks/docker.yml
-      tags: cli
     - import_tasks: tasks/cli-tools.yml
       tags: cli
     - import_tasks: tasks/desktop.yml

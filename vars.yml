@@ -1,6 +1,8 @@
 cli:
   ppas:
+    - "deb [arch=amd64] https://apt.releases.hashicorp.com {{ ansible_facts['distribution_release'] }} main"
   ppa_keys:
+    - "https://apt.releases.hashicorp.com/gpg"
   snap_pkgs:
     - "bw"
   pkgs:
@@ -44,6 +46,8 @@ cli:
     - "tshark"
     - "vim"
     - "git"
+    - "vagrant"
+    - "terraform"
 
 desktop:
   ppas:
@@ -76,7 +80,6 @@ tools:
   nettools: "https://raw.githubusercontent.com/veerendra2/useless-scripts/master/tools/netTools.py"
   ssid_list: "https://raw.githubusercontent.com/veerendra2/useless-scripts/master/tools/ssid_list.py"
   pastebin: "https://raw.githubusercontent.com/veerendra2/useless-scripts/master/tools/pastebin.py"
-  deauth: "https://raw.githubusercontent.com/veerendra2/wifi-deauth-attack/master/deauth.py"
 
 git_projects:
   my-utils: "https://github.com/veerendra2/my-utils.git"
