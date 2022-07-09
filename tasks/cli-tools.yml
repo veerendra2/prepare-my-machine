@@ -73,6 +73,7 @@
     dest: "/usr/local/bin/{{ item.key }}"
     mode: "0111"
   loop: "{{ lookup('dict', tools) }}"
+  become: true
 
 - name: Download nordvpn script.
   get_url:
@@ -80,15 +81,15 @@
     dest: /tmp/nordvpn.sh
     mode: 0775
 
-- name: Run nordvpn install script.
-  command: /tmp/nordvpn.sh
+#- name: Run nordvpn install script.
+#  command: /tmp/nordvpn.sh
 
-- name: Ensure nordvpn users are added to the nordvpn group.
-  user:
-    name: "{{ ansible_env.USER }}"
-    groups: nordvpn
-    append: true
-  become: true
+#- name: Ensure nordvpn users are added to the nordvpn group.
+#  user:
+#    name: "{{ ansible_env.USER }}"
+#    groups: nordvpn
+#    append: true
+#  become: true
 
 - name: Download dotfiles script.
   get_url:
