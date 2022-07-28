@@ -48,6 +48,11 @@ cli:
     - "git"
     - "vagrant"
     - "terraform"
+    - "golang"
+    - "build-essential"
+    - "libpcap-dev"
+    - "libusb-1.0-0-dev"
+    - "libnetfilter-queue-dev"
 
 desktop:
   ppas:

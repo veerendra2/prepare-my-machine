@@ -1,14 +1,14 @@
 ![GitHub forks](https://img.shields.io/github/forks/veerendra2/init-my-laptop?style=plastic) 
 ![GitHub Repo stars](https://img.shields.io/github/stars/veerendra2/init-my-laptop?style=plastic)
-# Init My Laptop
-An ansible playbook to prepare my personal laptop
+# Init My Ubuntu Laptop
+An ansible playbook to prepare my ubuntu laptop
 
-* Tested on `Ubuntu 20.04.4 LTS`
+* Tested on `Ubuntu 22.04 LTS`
 * All packages listed in [`vars.yml`](./vars.yml)
 * Tags to provide to ansible playbook
-  * `all` Runs all tasks
-  * `cli` Runs cli and docker tasks
+  * `cli` Runs cli tasks to install cli related tools
   * `desktop` Run desktop tasks to install desktop related apps 
+  * `all` Runs `cli` + `desktop` tasks
 
 
 ## Run
