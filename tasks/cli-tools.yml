@@ -16,6 +16,11 @@
   when: cli.ppa_keys
   become: true
 
+- name: Install protonvpn repos
+  apt:
+    dep: "{{ protonvpn_deb_pkg_link }}"
+  become: true
+
 - name: Run update
   apt:
     update_cache: true
@@ -130,3 +135,34 @@
     url: https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
     dest: /tmp/minikube
     mode: 0775
+
+- set_fact:
+    CUR_USER_HOME: "{{ lookup('env', 'HOME') }}"
+
+- name: Build bettercap
+  shell: |
+    go env -w GO111MODULE=off
+    go get -u github.com/bettercap/bettercap
+
+- name: Install bettercap
+  shell: |
+    mv {{ CUR_USER_HOME }}/go/bin/bettercap /usr/local/bin/
+    rm -rf {{ CUR_USER_HOME }}/go
+    bettercap -version
+  become: true
+  register: output
+
+- name: Display bettercap version
+  debug:
+    msg: "{{ output.stdout }}"
+  when: output.rc == 0
+
+- name: Install bettercap caplets
+  shell: bettercap -eval "caplets.update; ui.update; q"
+  when: output.rc == 0
+  ignore_errors: true
+  become: true
+
+- name: Add ngrok token
+  shell: "ngrok config add-authtoken {{ ngrok_token }}"
+  ignore_errors: true

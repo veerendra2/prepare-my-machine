@@ -5,6 +5,7 @@ cli:
     - "https://apt.releases.hashicorp.com/gpg"
   snap_pkgs:
     - "bw"
+    - "ngrok"
   pkgs:
     - "systemtap"
     - "iotop"
@@ -53,6 +54,9 @@ cli:
     - "libpcap-dev"
     - "libusb-1.0-0-dev"
     - "libnetfilter-queue-dev"
+    - "protonvpn"
+    - "gnome-shell-extension-appindicator"
+    - "gir1.2-appindicator3-0.1"
 
 desktop:
   ppas:
@@ -89,3 +93,5 @@ tools:
 git_projects:
   my-utils: "https://github.com/veerendra2/my-utils.git"
   veerendra2.github.io: "https://github.com/veerendra2/veerendra2.github.io.git"
+
+protonvpn_deb_pkg_link: "https://protonvpn.com/download/protonvpn-stable-release_1.0.1-1_all.deb"
