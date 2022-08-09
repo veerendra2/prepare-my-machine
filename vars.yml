@@ -89,6 +89,9 @@ tools:
   nettools: "https://raw.githubusercontent.com/veerendra2/useless-scripts/master/tools/netTools.py"
   ssid_list: "https://raw.githubusercontent.com/veerendra2/useless-scripts/master/tools/ssid_list.py"
   pastebin: "https://raw.githubusercontent.com/veerendra2/useless-scripts/master/tools/pastebin.py"
+  minikube: "https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64"
+  kind: "https://kind.sigs.k8s.io/dl/v0.14.0/kind-linux-amd64"
+  kubectl: "https://dl.k8s.io/release/v1.24.0/bin/linux/amd64/kubectl"
 
 git_projects:
   my-utils: "https://github.com/veerendra2/my-utils.git"

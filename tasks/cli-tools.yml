@@ -80,22 +80,6 @@
   loop: "{{ lookup('dict', tools) }}"
   become: true
 
-# - name: Download nordvpn script.
-#   get_url:
-#     url: https://downloads.nordcdn.com/apps/linux/install.sh
-#     dest: /tmp/nordvpn.sh
-#     mode: 0775
-
-# - name: Run nordvpn install script.
-#   command: /tmp/nordvpn.sh
-
-# - name: Ensure nordvpn users are added to the nordvpn group.
-#   user:
-#     name: "{{ ansible_env.USER }}"
-#     groups: nordvpn
-#     append: true
-#   become: true
-
 - name: Download dotfiles script.
   get_url:
     url: https://raw.githubusercontent.com/veerendra2/dotfiles/master/install.sh
@@ -110,7 +94,7 @@
 #     git clone https://github.com/radareorg/radare2
 #     pushd ./radare2
 #     sys/install.sh
-
+# ---------------------- Start nvidia drivers installation ----------------------
 - name: Check Nvidia card present
   shell: lspci | grep -i --color 'vga\|3d\|2d' | grep -i NVIDIA
   register: output
@@ -129,13 +113,9 @@
       shell: /tmp/graphic_drivers_install.sh
       become: true
   when: output.rc == 0
+# ---------------------- Start nvidia drivers installation ----------------------
 
-- name: Install minikube binary
-  get_url:
-    url: https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
-    dest: /tmp/minikube
-    mode: 0775
-
+# ---------------------- Start bettercap installation ----------------------
 - set_fact:
     CUR_USER_HOME: "{{ lookup('env', 'HOME') }}"
 
@@ -162,7 +142,7 @@
   when: output.rc == 0
   ignore_errors: true
   become: true
-
+# ---------------------- End bettercap installation ----------------------
 - name: Add ngrok token
   shell: "ngrok config add-authtoken {{ ngrok_token }}"
   ignore_errors: true
