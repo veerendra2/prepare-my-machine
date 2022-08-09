@@ -7,12 +7,21 @@
   gather_facts: yes
   vars_files:
     - vars.yml
+    #- vault.yml
 
   pre_tasks:
     - name: Run Update
       apt:
         upgrade: yes
         update_cache: yes
+      ignore_errors: yes
+      become: yes
+
+  post_tasks:
+    - name: Run autoremove
+      apt:
+        autoclean: yes
+        autoremove: yes
       ignore_errors: yes
       become: yes
 
