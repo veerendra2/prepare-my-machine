@@ -1,4 +1,8 @@
 ---
+- set_fact:
+    CUR_USER_HOME: "{{ lookup('env', 'HOME') }}"
+    CUR_USER: "{{ ansible_env.USER }}"
+
 - name: Add ppa
   apt_repository:
     repo: "{{ item }}"
@@ -18,7 +22,7 @@
 
 - name: Install protonvpn repos
   apt:
-    dep: "{{ protonvpn_deb_pkg_link }}"
+    deb: "{{ protonvpn_deb_pkg_link }}"
   become: true
 
 - name: Run update
@@ -42,13 +46,13 @@
     name: "{{ pip_pkgs }}"
   become: true
 
-- name: Download Docker install convenience script.
+- name: Download Docker install convenience script
   get_url:
     url: https://get.docker.com/
     dest: /tmp/get-docker.sh
     mode: 0775
 
-- name: Run Docker install convenience script.
+- name: Run Docker install convenience script
   command: /tmp/get-docker.sh
   environment:
     CHANNEL: stable
@@ -59,7 +63,7 @@
     state: started
     enabled: true
 
-- name: Install Docker Compose using Pip.
+- name: Install Docker Compose using pip
   pip:
     name: docker-compose
     state: present
@@ -67,7 +71,7 @@
 
 - name: Ensure docker users are added to the docker group.
   user:
-    name: "{{ ansible_env.USER }}"
+    name: "{{ CUR_USER }}"
     groups: docker
     append: true
   become: true
@@ -82,7 +86,7 @@
 
 - name: Download dotfiles script.
   get_url:
-    url: https://raw.githubusercontent.com/veerendra2/dotfiles/master/install.sh
+    url: "{{ dotfiles_script }}"
     dest: /tmp/dotfiles.sh
     mode: 0775
 
@@ -105,7 +109,7 @@
 
     - name: Download custom script
       get_url:
-        url: https://raw.githubusercontent.com/veerendra2/my-utils/master/scripts/graphic_drivers_install.sh
+        url: "graphic_card_utils_script"
         dest: /tmp/graphic_drivers_install.sh
         mode: 0775
 
@@ -116,8 +120,6 @@
 # ---------------------- Start nvidia drivers installation ----------------------
 
 # ---------------------- Start bettercap installation ----------------------
-- set_fact:
-    CUR_USER_HOME: "{{ lookup('env', 'HOME') }}"
 
 - name: Build bettercap
   shell: |
@@ -143,6 +145,7 @@
   ignore_errors: true
   become: true
 # ---------------------- End bettercap installation ----------------------
+
 - name: Add ngrok token
   shell: "ngrok config add-authtoken {{ ngrok_token }}"
   ignore_errors: true

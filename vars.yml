@@ -98,3 +98,6 @@ git_projects:
   veerendra2.github.io: "https://github.com/veerendra2/veerendra2.github.io.git"
 
 protonvpn_deb_pkg_link: "https://protonvpn.com/download/protonvpn-stable-release_1.0.1-1_all.deb"
+
+dotfiles_script: "https://raw.githubusercontent.com/veerendra2/dotfiles/master/install.sh"
+graphic_card_utils_script: "https://raw.githubusercontent.com/veerendra2/my-utils/master/scripts/graphic_drivers_install.sh"
