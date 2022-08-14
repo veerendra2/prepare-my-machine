@@ -69,6 +69,7 @@ desktop:
     - "spotify"
     - "bitwarden"
     - "code"
+    - "gimp"
   pkgs:
     - "filezilla"
     - "vlc"
