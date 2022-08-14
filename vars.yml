@@ -76,6 +76,7 @@ desktop:
     - "wireshark"
     - "anoise"
     - "signal-desktop"
+    - "pinta"
 
 pip_pkgs:
   - "requests"
