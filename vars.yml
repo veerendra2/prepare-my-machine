@@ -1,6 +1,5 @@
 cli:
   ppas:
-    - "deb [arch=amd64] https://apt.releases.hashicorp.com {{ ansible_facts['distribution_release'] }} main"
   ppa_keys:
     - "https://apt.releases.hashicorp.com/gpg"
   snap_pkgs:
