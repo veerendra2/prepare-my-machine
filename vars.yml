@@ -10,6 +10,8 @@ cli:
     - "jq"
     - "yq"
     - "minikube"
+    - "terraform"
+
   pkgs:
     - "systemtap"
     - "iotop"
@@ -52,7 +54,6 @@ cli:
     - "vim"
     - "git"
     - "vagrant"
-    - "terraform"
     - "golang"
     - "build-essential"
     - "libpcap-dev"
@@ -93,10 +94,11 @@ pip_pkgs:
 
 git_projects:
   my-utils: "https://github.com/veerendra2/my-utils.git"
-  veerendra2.github.io: "https://github.com/veerendra2/veerendra2.github.io.git"
 
-protonvpn_deb_pkg_link: "https://protonvpn.com/download/protonvpn-stable-release_1.0.1-1_all.deb"
+protonvpn_deb_pkg_link: "https://repo.protonvpn.com/debian/dists/stable/main/binary-all/protonvpn-stable-release_1.0.3_all.deb"
 
 dotfiles_script: "https://raw.githubusercontent.com/veerendra2/dotfiles/master/install.sh"
 graphic_card_utils_script: "https://raw.githubusercontent.com/veerendra2/my-utils/master/scripts/graphic_drivers_install.sh"
 ngrok_token: ""
+user_home: "{{ lookup('env', 'HOME') }}"
+user_name: "{{ ansible_env.USER }}"
