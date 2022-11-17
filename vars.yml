@@ -1,8 +1,6 @@
 cli:
   ppas:
-    - "deb [arch=amd64] https://apt.releases.hashicorp.com {{ ansible_facts['distribution_release'] }} main"
   ppa_keys:
-    - "https://apt.releases.hashicorp.com/gpg"
   snap_pkgs:
     - "bw"
     - "ngrok"
@@ -11,7 +9,6 @@ cli:
     - "yq"
     - "minikube"
     - "terraform"
-
   pkgs:
     - "systemtap"
     - "iotop"
@@ -32,7 +29,6 @@ cli:
     - "bridge-utils"
     - "conntrack"
     - "python3-dev"
-    - "python3-scapy"
     - "screen"
     - "traceroute"
     - "ssh"
@@ -62,26 +58,24 @@ cli:
     - "protonvpn"
     - "gir1.2-appindicator3-0.1"
     - "pastebinit"
+    - "wireguard"
 
 desktop:
   ppas:
     - "ppa:wireshark-dev/stable"
     - "ppa:costales/anoise"
-    - "deb [arch=amd64] https://updates.signal.org/desktop/apt xenial main"
   ppa_keys:
-    - "https://updates.signal.org/desktop/apt/keys.asc"
   snap_pkgs:
     - "spotify"
     - "bitwarden"
     - "code"
-    - "gimp"
+    - "signal-desktop"
+    - "vlc"
+    - "pinta"
   pkgs:
     - "filezilla"
-    - "vlc"
     - "wireshark"
     - "anoise"
-    - "signal-desktop"
-    - "pinta"
     - "gnome-shell-extension-appindicator"
 
 pip_pkgs:
@@ -91,14 +85,17 @@ pip_pkgs:
   - "beautifulsoup4"
   - "youtube_dl"
   - "ansible"
+  - "scapy"
+  - "docker-compose"
 
 git_projects:
   my-utils: "https://github.com/veerendra2/my-utils.git"
 
 protonvpn_deb_pkg_link: "https://repo.protonvpn.com/debian/dists/stable/main/binary-all/protonvpn-stable-release_1.0.3_all.deb"
-
 dotfiles_script: "https://raw.githubusercontent.com/veerendra2/dotfiles/master/install.sh"
-graphic_card_utils_script: "https://raw.githubusercontent.com/veerendra2/my-utils/master/scripts/graphic_drivers_install.sh"
+gpu_utils_script: "https://raw.githubusercontent.com/veerendra2/my-utils/master/scripts/graphic_drivers_install.sh"
+
 ngrok_token: ""
+
 user_home: "{{ lookup('env', 'HOME') }}"
 user_name: "{{ ansible_env.USER }}"
