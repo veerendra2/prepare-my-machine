@@ -1,8 +1,4 @@
 ---
-- set_fact:
-    CUR_USER_HOME: "{{ lookup('env', 'HOME') }}"
-    CUR_USER: "{{ ansible_env.USER }}"
-
 - name: Add ppa
   apt_repository:
     repo: "{{ item }}"
@@ -71,7 +67,7 @@
 
 - name: Ensure docker users are added to the docker group.
   user:
-    name: "{{ CUR_USER }}"
+    name: "{{ user_name }}"
     groups: docker
     append: true
   become: true
@@ -120,8 +116,8 @@
 
 - name: Install bettercap
   shell: |
-    mv {{ CUR_USER_HOME }}/go/bin/bettercap /usr/local/bin/
-    rm -rf {{ CUR_USER_HOME }}/go
+    mv {{ user_home }}/go/bin/bettercap /usr/local/bin/
+    rm -rf {{ user_home }}/go
     bettercap -version
   become: true
   register: output
