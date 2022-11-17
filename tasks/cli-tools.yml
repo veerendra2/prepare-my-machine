@@ -76,14 +76,6 @@
     append: true
   become: true
 
-- name: Download tools
-  get_url:
-    url: "{{ item.value }}"
-    dest: "/usr/local/bin/{{ item.key }}"
-    mode: "0111"
-  loop: "{{ lookup('dict', tools) }}"
-  become: true
-
 - name: Download dotfiles script.
   get_url:
     url: "{{ dotfiles_script }}"

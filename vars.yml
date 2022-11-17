@@ -6,6 +6,10 @@ cli:
   snap_pkgs:
     - "bw"
     - "ngrok"
+    - "kubectl"
+    - "jq"
+    - "yq"
+    - "minikube"
   pkgs:
     - "systemtap"
     - "iotop"
@@ -55,8 +59,8 @@ cli:
     - "libusb-1.0-0-dev"
     - "libnetfilter-queue-dev"
     - "protonvpn"
-    - "gnome-shell-extension-appindicator"
     - "gir1.2-appindicator3-0.1"
+    - "pastebinit"
 
 desktop:
   ppas:
@@ -77,6 +81,7 @@ desktop:
     - "anoise"
     - "signal-desktop"
     - "pinta"
+    - "gnome-shell-extension-appindicator"
 
 pip_pkgs:
   - "requests"
@@ -86,17 +91,6 @@ pip_pkgs:
   - "youtube_dl"
   - "ansible"
 
-tools:
-  httpserver: "https://raw.githubusercontent.com/veerendra2/useless-scripts/master/tools/httpserver.py"
-  nettools: "https://raw.githubusercontent.com/veerendra2/useless-scripts/master/tools/netTools.py"
-  ssid_list: "https://raw.githubusercontent.com/veerendra2/useless-scripts/master/tools/ssid_list.py"
-  pastebin: "https://raw.githubusercontent.com/veerendra2/useless-scripts/master/tools/pastebin.py"
-  minikube: "https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64"
-  kind: "https://kind.sigs.k8s.io/dl/v0.14.0/kind-linux-amd64"
-  kubectl: "https://dl.k8s.io/release/v1.24.0/bin/linux/amd64/kubectl"
-  yq: "https://github.com/mikefarah/yq/releases/download/v4.27.2/yq_freebsd_amd64"
-  jq: "https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64"
-
 git_projects:
   my-utils: "https://github.com/veerendra2/my-utils.git"
   veerendra2.github.io: "https://github.com/veerendra2/veerendra2.github.io.git"
@@ -105,3 +99,4 @@ protonvpn_deb_pkg_link: "https://protonvpn.com/download/protonvpn-stable-release
 
 dotfiles_script: "https://raw.githubusercontent.com/veerendra2/dotfiles/master/install.sh"
 graphic_card_utils_script: "https://raw.githubusercontent.com/veerendra2/my-utils/master/scripts/graphic_drivers_install.sh"
+ngrok_token: ""
