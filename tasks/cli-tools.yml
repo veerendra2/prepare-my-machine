@@ -1,125 +1,126 @@
 ---
-- name: Add ppa
-  apt_repository:
-    repo: "{{ item }}"
-    state: present
-    update_cache: no
-  with_items: "{{ cli.ppas }}"
-  when: cli.ppas
-  become: true
+# - name: Add PPA
+#   apt_repository:
+#     repo: "{{ item }}"
+#     state: present
+#     update_cache: no
+#   with_items: "{{ cli.ppas }}"
+#   when: cli.ppas
+#   become: true
 
-- name: Add repo keys
-  apt_key:
-    url: "{{ item }}"
-    state: present
-  with_items: "{{ cli.ppa_keys }}"
-  when: cli.ppa_keys
-  become: true
+# - name: Add PPA repo keys
+#   apt_key:
+#     url: "{{ item }}"
+#     state: present
+#   with_items: "{{ cli.ppa_keys }}"
+#   when: cli.ppa_keys
+#   become: true
 
-- name: Install protonvpn repos
-  apt:
-    deb: "{{ protonvpn_deb_pkg_link }}"
-  become: true
+# - name: Install protonvpn deb package
+#   apt:
+#     deb: "{{ protonvpn_deb_pkg_link }}"
+#   become: true
 
-- name: Run update
-  apt:
-    update_cache: true
-  become: true
+# - name: Run update
+#   apt:
+#     update_cache: true
+#   become: true
 
-- name: Install packages
-  apt:
-    name: "{{ cli.pkgs }}"
-    state: latest
-  become: true
+# - name: Install packages
+#   apt:
+#     name: "{{ cli.pkgs }}"
+#     state: latest
+#   become: true
 
-- name: Install snap packages
-  snap:
-    name: "{{ cli.snap_pkgs }}"
-  become: true
+# - name: Install snap packages
+#   snap:
+#     name: "{{ cli.snap_pkgs }}"
+#     classic: yes
+#   become: true
 
-- name: Install python packges
-  pip:
-    name: "{{ pip_pkgs }}"
-  become: true
+# - name: Install pypi packges
+#   pip:
+#     name: "{{ pip_pkgs }}"
+#     state: present
+#     executable: "pip3"
 
-- name: Download Docker install convenience script
-  get_url:
-    url: https://get.docker.com/
-    dest: /tmp/get-docker.sh
-    mode: 0775
+# - name: Download docker script
+#   get_url:
+#     url: https://get.docker.com/
+#     dest: /tmp/get-docker.sh
+#     mode: 0775
 
-- name: Run Docker install convenience script
-  command: /tmp/get-docker.sh
-  environment:
-    CHANNEL: stable
+# - name: Install docker
+#   command: /tmp/get-docker.sh
+#   environment:
+#     CHANNEL: stable
 
-- name: Ensure Docker is started.
-  service:
-    name: docker
-    state: started
-    enabled: true
+# - name: Start docker daemon
+#   service:
+#     name: docker
+#     state: started
+#     enabled: true
 
-- name: Install Docker Compose using pip
-  pip:
-    name: docker-compose
-    state: present
-    executable: "pip3"
+# - name: Add current user to docker group
+#   user:
+#     name: "{{ user_name }}"
+#     groups: docker
+#     append: true
+#   become: true
 
-- name: Ensure docker users are added to the docker group.
-  user:
-    name: "{{ user_name }}"
-    groups: docker
-    append: true
-  become: true
+# - name: Download dotfiles script
+#   get_url:
+#     url: "{{ dotfiles_script }}"
+#     dest: /tmp/dotfiles.sh
+#     mode: 0775
 
-- name: Download dotfiles script.
-  get_url:
-    url: "{{ dotfiles_script }}"
-    dest: /tmp/dotfiles.sh
-    mode: 0775
+# - name: Install dotfiles
+#   shell: /tmp/dotfiles.sh
 
-- name: Install dotfiles
-  shell: /tmp/dotfiles.sh
+# # - name: Build and install radare2
+# #   shell: |
+# #     git clone https://github.com/radareorg/radare2
+# #     pushd ./radare2
+# #     sys/install.sh
 
-# - name: Build and install radare2
-#   shell: |
-#     git clone https://github.com/radareorg/radare2
-#     pushd ./radare2
-#     sys/install.sh
-# ---------------------- Start nvidia drivers installation ----------------------
-- name: Check Nvidia card present
-  shell: lspci | grep -i --color 'vga\|3d\|2d' | grep -i NVIDIA
-  register: output
-  ignore_errors: true
+# - name: Check Nvidia card present
+#   shell: lspci | grep -i --color 'vga\|3d\|2d' | grep -i NVIDIA
+#   register: output
+#   ignore_errors: true
 
-- block:
-    - debug: msg="{{ output.stdout }}"
+# - block:
+#     - debug: msg="{{ output.stdout }}"
 
-    - name: Download custom script
-      get_url:
-        url: "graphic_card_utils_script"
-        dest: /tmp/graphic_drivers_install.sh
-        mode: 0775
+#     - name: Download custom script
+#       get_url:
+#         url: "{{ gpu_utils_script }}"
+#         dest: /tmp/gpu_utils_script.sh
+#         mode: 0775
 
-    - name: Install nvidia drivers, hashcat and aircrack-ng
-      shell: /tmp/graphic_drivers_install.sh
-      become: true
-  when: output.rc == 0
-# ---------------------- Start nvidia drivers installation ----------------------
+#     - name: Install nvidia drivers, hashcat and aircrack-ng
+#       shell: /tmp/gpu_utils_script.sh
+#       become: true
+#   when: output.rc == 0
 
-# ---------------------- Start bettercap installation ----------------------
+- name: Create temporary bettercap build directory
+  tempfile:
+    state: directory
+    suffix: build
+  register: tempdir
 
 - name: Build bettercap
   shell: |
     go env -w GO111MODULE=off
     go get -u github.com/bettercap/bettercap
+  environment:
+    GOPATH: "{{ tempdir.path }}"
 
 - name: Install bettercap
   shell: |
-    mv {{ user_home }}/go/bin/bettercap /usr/local/bin/
-    rm -rf {{ user_home }}/go
+    mv {{ tempdir.path }}/bin/bettercap /usr/local/bin/
+    rm -rf {{ tempdir.path }}
     bettercap -version
-  become: true
+  become: yes
   register: output
 
 - name: Display bettercap version
@@ -132,7 +133,6 @@
   when: output.rc == 0
   ignore_errors: true
   become: true
-# ---------------------- End bettercap installation ----------------------
 
 - name: Add ngrok token
   shell: "ngrok config add-authtoken {{ ngrok_token }}"

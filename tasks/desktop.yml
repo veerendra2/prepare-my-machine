@@ -1,5 +1,5 @@
 ---
-- name: Add ppa
+- name: Add PPA
   apt_repository:
     repo: "{{ item }}"
     state: present
@@ -8,7 +8,7 @@
   when: desktop.ppas
   become: true
 
-- name: Add repo keys
+- name: Add PPA repo keys
   apt_key:
     url: "{{ item }}"
     state: present

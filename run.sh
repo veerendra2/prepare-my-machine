@@ -1,4 +1,6 @@
 #!/bin/bash
+# https://github.com/veerendra2/ubuntu-dev
+
 if [ "$1" == "" ]
 then
     echo "Usage: run.sh cli|desktop|all"
@@ -6,11 +8,9 @@ then
 fi
 
 echo "***************** Stating Installing Packages *****************"
-# Quick and dirty way to make current user as sudoer
 CUR_USER=`whoami`
-echo "$CUR_USER ALL=(ALL) NOPASSWD:ALL" > $CUR_USER
-sudo chown root:root $CUR_USER
-sudo mv $CUR_USER /etc/sudoers.d/$CUR_USER
+echo "[*] Add $CUR_USER sudoer"
+echo "$CUR_USER ALL=(ALL) NOPASSWD:ALL" | sudo tee /etc/sudoers.d/$CUR_USER
 
 sudo apt-get update
 sudo apt-get install -y git python3 python3-pip \
@@ -23,5 +23,6 @@ pip3 install ansible
 mkdir -p ~/projects
 git clone https://github.com/veerendra2/ubuntu-dev.git ~/projects/ubuntu-dev
 pushd ~/projects/ubuntu-dev
+
 echo "***************** Starting Ansible Playbook *****************"
-exec ansible-playbook main.yml --tags=$1
+bash ansible-playbook main.yml --tags=$1
