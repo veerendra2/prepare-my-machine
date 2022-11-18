@@ -9,7 +9,7 @@ fi
 
 echo "***************** Stating Installing Packages *****************"
 CUR_USER=`whoami`
-echo "[*] Add $CUR_USER sudoer"
+echo "[*] Add $CUR_USER to sudoer"
 echo "$CUR_USER ALL=(ALL) NOPASSWD:ALL" | sudo tee /etc/sudoers.d/$CUR_USER
 
 sudo apt-get update
@@ -25,4 +25,4 @@ git clone https://github.com/veerendra2/ubuntu-dev.git ~/projects/ubuntu-dev
 pushd ~/projects/ubuntu-dev
 
 echo "***************** Starting Ansible Playbook *****************"
-bash ansible-playbook main.yml --tags=$1
+exec ansible-playbook main.yml --tags=$1
