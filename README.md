@@ -1,7 +1,7 @@
 ![GitHub forks](https://img.shields.io/github/forks/veerendra2/init-my-laptop?style=plastic)
 ![GitHub Repo stars](https://img.shields.io/github/stars/veerendra2/init-my-laptop?style=plastic)
-# Ubuntu Dev
-An ansible playbook to prepare my ubuntu laptop
+# Init My Ubuntu
+[IaC](https://en.wikipedia.org/wiki/Infrastructure_as_code) setup to install necessary packages and configure my Ubuntu(Or any Linux distro).
 
 * Tested on `Ubuntu 22.04 LTS`
 * All packages listed in [`vars.yml`](./vars.yml)
