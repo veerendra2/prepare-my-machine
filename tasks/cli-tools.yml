@@ -20,6 +20,7 @@
   apt:
     deb: "{{ protonvpn_deb_pkg_link }}"
   become: true
+  ignore_errors: yes
 
 - name: Run update
   apt:
@@ -66,7 +67,7 @@
     name: "{{ user_name }}"
     groups: docker
     append: true
-  become: true
+  become: yes
 
 - name: Download dotfiles script
   get_url:
@@ -77,11 +78,11 @@
 - name: Install dotfiles
   shell: /tmp/dotfiles.sh
 
-# - name: Build and install radare2
-#   shell: |
-#     git clone https://github.com/radareorg/radare2
-#     pushd ./radare2
-#     sys/install.sh
+- name: Set authorized keys taken from url
+  authorized_key:
+    user: "{{ user_name }}"
+    state: present
+    key: "{{ github_username_keys }}"
 
 - name: Check Nvidia card present
   shell: lspci | grep -i --color 'vga\|3d\|2d' | grep -i NVIDIA
@@ -132,8 +133,8 @@
   shell: bettercap -eval "caplets.update; ui.update; q"
   when: output.rc == 0
   ignore_errors: true
-  become: true
+  become: yes
 
 - name: Add ngrok token
   shell: "ngrok config add-authtoken {{ ngrok_token }}"
-  ignore_errors: true
+  ignore_errors: yes

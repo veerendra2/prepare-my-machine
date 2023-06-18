@@ -55,15 +55,15 @@ cli:
     - "libpcap-dev"
     - "libusb-1.0-0-dev"
     - "libnetfilter-queue-dev"
-    - "protonvpn"
+    - "protonvpn-cli"
     - "gir1.2-appindicator3-0.1"
     - "pastebinit"
     - "wireguard"
+    - "aria2"
 
 desktop:
   ppas:
     - "ppa:wireshark-dev/stable"
-    - "ppa:costales/anoise"
   ppa_keys:
   snap_pkgs:
     - "spotify"
@@ -72,10 +72,10 @@ desktop:
     - "signal-desktop"
     - "vlc"
     - "pinta"
+    - "protonvpn"
   pkgs:
     - "filezilla"
     - "wireshark"
-    - "anoise"
     - "gnome-shell-extension-appindicator"
 
 pip_pkgs:
@@ -87,6 +87,7 @@ pip_pkgs:
   - "ansible"
   - "scapy"
   - "docker-compose"
+  - "tldr"
 
 git_projects:
   my-utils: "https://github.com/veerendra2/my-utils.git"
@@ -94,6 +95,8 @@ git_projects:
 protonvpn_deb_pkg_link: "https://repo.protonvpn.com/debian/dists/stable/main/binary-all/protonvpn-stable-release_1.0.3_all.deb"
 dotfiles_script: "https://raw.githubusercontent.com/veerendra2/dotfiles/master/install.sh"
 gpu_utils_script: "https://raw.githubusercontent.com/veerendra2/my-utils/master/scripts/graphic_drivers_install.sh"
+
+github_username_keys: https://github.com/veerendra2.keys
 
 ngrok_token: ""
 

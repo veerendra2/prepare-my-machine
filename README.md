@@ -6,19 +6,17 @@
 * Tested on `Ubuntu 22.04 LTS`
 * All packages listed in [`vars.yml`](./vars.yml)
 * Tags to provide to ansible playbook
-  * `cli` Runs cli tasks to install cli related tools
-  * `desktop` Run desktop tasks to install desktop related apps
-  * `all` Runs `cli` + `desktop` tasks
-
+  * No Tag -  Runs cli tasks to install cli related tools
+  * `desktop` - Runs `desktop` and `cli` tasks to install desktop related apps
 
 ## Run
 ```
-curl https://raw.githubusercontent.com/veerendra2/ubuntu-dev/master/run.sh | bash -s all
+curl https://raw.githubusercontent.com/veerendra2/init-my-ubuntu/master/run.sh | bash
 ```
 Or
 ```
-$ git clone https://github.com/veerendra2/ubuntu-dev.git
-$ cd ubuntu-dev
+$ git clone https://github.com/veerendra2/init-my-ubuntu .git
+$ cd init-my-ubuntu
 $ pip3 install ansible
-$ ansible-playbook main.yml -tags=all # all|cli|desktop
+$ ansible-playbook main.yml -tags=all # desktop
 ```

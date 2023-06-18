@@ -9,7 +9,7 @@
     #- vault.yml
 
   pre_tasks:
-    - name: Run Update
+    - name: Run update
       apt:
         upgrade: yes
         update_cache: yes
@@ -25,7 +25,8 @@
       become: yes
 
   tasks:
-    - import_tasks: tasks/cli-tools.yml
-      tags: cli
     - import_tasks: tasks/desktop.yml
-      tags: desktop
+      tags: [ never, desktop ]
+
+    - import_tasks: tasks/cli-tools.yml
+      tags: [ always, cli]

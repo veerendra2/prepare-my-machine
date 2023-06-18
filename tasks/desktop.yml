@@ -35,7 +35,7 @@
 
 - name: Create directories
   file:
-    name: projects
+    name: "{{lookup('env','HOME')}}/project"
     state: directory
 
 - name: Cloning repo
@@ -43,8 +43,9 @@
     repo: "{{ item.value }}"
     dest: "{{lookup('env','HOME')}}/projects/{{ item.key }}"
     force: true
-  loop: "{{ lookup('dict', git_projects) }}"
+  loop: "{{ lookup('dict', git_projects, wantlist=True) }}"
 
-- name: Change Ubuntu App Icon
+- name: Change ubuntu gnome app icon location
   shell: "gsettings set org.gnome.shell.extensions.dash-to-dock show-apps-at-top true"
   ignore_errors: true
+  when:  ansible_facts["distribution"] == "Ubuntu"
