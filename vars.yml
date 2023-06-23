@@ -72,11 +72,10 @@ desktop:
     - "signal-desktop"
     - "vlc"
     - "pinta"
-    - "protonvpn"
   pkgs:
     - "filezilla"
     - "wireshark"
-    - "gnome-shell-extension-appindicator"
+    - "protonvpn"
 
 pip_pkgs:
   - "requests"

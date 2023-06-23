@@ -6,7 +6,6 @@
   gather_facts: yes
   vars_files:
     - vars.yml
-    #- vault.yml
 
   pre_tasks:
     - name: Run update
@@ -25,8 +24,8 @@
       become: yes
 
   tasks:
-    - import_tasks: tasks/desktop.yml
-      tags: [ never, desktop ]
-
     - import_tasks: tasks/cli-tools.yml
       tags: [ always, cli]
+
+    - import_tasks: tasks/desktop.yml
+      tags: [ never, desktop ]

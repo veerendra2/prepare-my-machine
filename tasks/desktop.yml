@@ -45,7 +45,13 @@
     force: true
   loop: "{{ lookup('dict', git_projects, wantlist=True) }}"
 
-- name: Change ubuntu gnome app icon location
-  shell: "gsettings set org.gnome.shell.extensions.dash-to-dock show-apps-at-top true"
-  ignore_errors: true
+- block:
+  - name: Install gnome-shell-extension-appindicator
+    apt:
+      name: gnome-shell-extension-appindicator
+      state: present
+
+  - name: Change ubuntu gnome app icon location
+    shell: "gsettings set org.gnome.shell.extensions.dash-to-dock show-apps-at-top true"
+    ignore_errors: true
   when:  ansible_facts["distribution"] == "Ubuntu"
