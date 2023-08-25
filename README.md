@@ -10,13 +10,23 @@
 | ------------------ |
 | [<img alt="Ansible Galaxy Role Name" src="https://img.shields.io/ansible/role/63075">](https://galaxy.ansible.com/veerendra2/prepare_dev_setup) |
 
-
 ## Run
 ```
 curl https://raw.githubusercontent.com/veerendra2/prepare-my-machine/master/bootstrap.sh | bash
 ```
 
+## MacOS
+Install [Homebrew](https://brew.sh/) and run below script
+```
+curl https://raw.githubusercontent.com/veerendra2/init-my-mac/master/run.sh | bash
+```
+
+####  Configuration Tips
+* [iTerm - going one word backwards and forwards](https://apple.stackexchange.com/a/293988)
+* [Configure bash(Homebrew) in iTerm for MacOS](https://github.com/veerendra2/dotfiles#configure-bashhomebrew-in-iterm-for-macos)
+
 ## Other repos
-| Repo | OS |
-| ---- | ---- |
-| https://github.com/veerendra2/init-my-windows | <img src="https://user-images.githubusercontent.com/8393701/248329539-0b792b81-2d32-4ef9-b92e-0350ad472d61.png" alt="Windows" width="25"/> |
+| Repo |
+| ---- |
+| https://github.com/veerendra2/init-my-windows <img src="https://user-images.githubusercontent.com/8393701/248329539-0b792b81-2d32-4ef9-b92e-0350ad472d61.png" alt="Windows" width="20"/> |
+| https://github.com/veerendra2/dotfiles :large_blue_circle: |

@@ -10,15 +10,7 @@
 
 ### MODIFY SCRIPT BELOW ACCORDING TO DISTRO ###
 $script = <<-SCRIPT
-sudo apt-get update
-sudo apt-get install -y git python3 python3-pip \
-    apt-transport-https \
-    ca-certificates \
-    curl ansible\
-    gnupg \
-    lsb-release
-pip3 install ansible
-mkdir ~/projects
+bash /vagrant/bootstrap.sh
 SCRIPT
 
 NODES_COUNT = 1
