@@ -1,20 +1,32 @@
-# Init My Ubuntu
-[IaC](https://en.wikipedia.org/wiki/Infrastructure_as_code) setup to install necessary packages and configure my Ubuntu(Or any Debian distro).
+![GitHub Repo stars](https://img.shields.io/github/stars/veerendra2/prepare-my-machine)
+![GitHub issues](https://img.shields.io/github/issues/veerendra2/prepare-my-machine)
 
-<img src="https://user-images.githubusercontent.com/8393701/248329468-ed036c98-08e7-4ee6-99ef-d5cef2e48a95.png" alt="Ubuntu" width="300"/>
+# Prepare My Machine
+[IaC](https://en.wikipedia.org/wiki/Infrastructure_as_code) setup to install necessary packages and configure my Ubuntu(Or any Debian distro) and MacOS.
 
-* All packages listed in [`vars.yml`](./vars.yml)
-* Tags to provide to ansible playbook
-  * No Tag -  Runs cli tasks to install cli related tools
-  * `desktop` - Runs `desktop` and `cli` tasks to install desktop related apps
+<img src="https://user-images.githubusercontent.com/8393701/248329468-ed036c98-08e7-4ee6-99ef-d5cef2e48a95.png" alt="Windows" width="70"/> <img src="https://user-images.githubusercontent.com/8393701/248331160-ae1cd8f6-7c4b-483b-9799-6b44ed3f30f2.png" alt="Mac" width="74"/> <img src="https://user-images.githubusercontent.com/8393701/263299605-4e5404f1-5e70-441b-9b57-477c5bf5405e.png" alt="ansible" width="70"/>
+
+| Used Ansible Roles |
+| ------------------ |
+| [<img alt="Ansible Galaxy Role Name" src="https://img.shields.io/ansible/role/63075">](https://galaxy.ansible.com/veerendra2/prepare_dev_setup) |
 
 ## Run
 ```
-curl https://raw.githubusercontent.com/veerendra2/init-my-ubuntu/master/run.sh | bash
+curl https://raw.githubusercontent.com/veerendra2/prepare-my-machine/master/bootstrap.sh | bash
 ```
 
-## Other Repos
-| Repo | OS |
-| ---- | ---- |
-| https://github.com/veerendra2/init-my-windows | <img src="https://user-images.githubusercontent.com/8393701/248329539-0b792b81-2d32-4ef9-b92e-0350ad472d61.png" alt="Windows" width="25"/> |
-| https://github.com/veerendra2/init-my-mac | <img src="https://user-images.githubusercontent.com/8393701/248331160-ae1cd8f6-7c4b-483b-9799-6b44ed3f30f2.png" alt="Mac" width="25"/> |
+## MacOS
+Install [Homebrew](https://brew.sh/) and run below script
+```
+curl https://raw.githubusercontent.com/veerendra2/init-my-mac/master/run.sh | bash
+```
+
+####  Configuration Tips
+* [iTerm - going one word backwards and forwards](https://apple.stackexchange.com/a/293988)
+* [Configure bash(Homebrew) in iTerm for MacOS](https://github.com/veerendra2/dotfiles#configure-bashhomebrew-in-iterm-for-macos)
+
+## Other repos
+| Repo |
+| ---- |
+| https://github.com/veerendra2/init-my-windows <img src="https://user-images.githubusercontent.com/8393701/248329539-0b792b81-2d32-4ef9-b92e-0350ad472d61.png" alt="Windows" width="20"/> |
+| https://github.com/veerendra2/dotfiles :large_blue_circle: |

@@ -1,31 +1,8 @@
-# Author: Veerendra Kakumanu
-# Description: An Ansible playbook to install packages
-
-- name: Prepare Ubuntu
+---
+- name: Prepare Developement Setup
   hosts: localhost
-  gather_facts: yes
   vars_files:
     - vars.yml
 
-  pre_tasks:
-    - name: Run update
-      apt:
-        upgrade: yes
-        update_cache: yes
-      ignore_errors: yes
-      become: yes
-
-  post_tasks:
-    - name: Run autoremove
-      apt:
-        autoclean: yes
-        autoremove: yes
-      ignore_errors: yes
-      become: yes
-
-  tasks:
-    - import_tasks: tasks/cli-tools.yml
-      tags: [ always, cli]
-
-    - import_tasks: tasks/desktop.yml
-      tags: [ never, desktop ]
+  roles:
+    - veerendra2.prepare_dev_setup

@@ -9,22 +9,14 @@
 # alpine/alpine64
 
 ### MODIFY SCRIPT BELOW ACCORDING TO DISTRO ###
-$script = <<-SCRIPT
-sudo apt-get update
-sudo apt-get install -y git python3 python3-pip \
-    apt-transport-https \
-    ca-certificates \
-    curl ansible\
-    gnupg \
-    lsb-release
-pip3 install ansible
-mkdir ~/projects
-SCRIPT
+# $script = <<-SCRIPT
+# bash /vagrant/bootstrap.sh
+# SCRIPT
 
 NODES_COUNT = 1
 RAM_MB = 1024
 CORE_COUNT = 2
-BOX = "ubuntu/focal64"
+BOX = "ubuntu/focal64" # ubuntu/jammy64
 
 
 Vagrant.configure("2") do |config|
@@ -44,9 +36,9 @@ Vagrant.configure("2") do |config|
       # server.vm.network :forwarded_port, guest: 22, host: 10122
       # server.vm.synced_folder "../data", "/vagrant_data"
 
-      #server.vm.provision "shell", path: "run.sh"
+      server.vm.provision "shell", path: "bootstrap.sh", privileged: false
       config.vm.synced_folder ".", "/vagrant"
-      server.vm.provision "shell", inline: $script
+      # server.vm.provision "shell", inline: $script
     end
   end
 end
