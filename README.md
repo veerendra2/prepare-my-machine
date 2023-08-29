@@ -11,17 +11,12 @@
 | [<img alt="Ansible Galaxy Role Name" src="https://img.shields.io/ansible/role/63075">](https://galaxy.ansible.com/veerendra2/prepare_dev_setup) |
 
 ## Run
+> :information_source: For MacOS [Homebrew](https://brew.sh/) must be installed before running this playbook
 ```
 curl https://raw.githubusercontent.com/veerendra2/prepare-my-machine/master/bootstrap.sh | bash
 ```
 
-## MacOS
-Install [Homebrew](https://brew.sh/) and run below script
-```
-curl https://raw.githubusercontent.com/veerendra2/init-my-mac/master/run.sh | bash
-```
-
-####  Configuration Tips
+####  iTerm Configuration Tips for MacOS
 * [iTerm - going one word backwards and forwards](https://apple.stackexchange.com/a/293988)
 * [Configure bash(Homebrew) in iTerm for MacOS](https://github.com/veerendra2/dotfiles#configure-bashhomebrew-in-iterm-for-macos)
 
