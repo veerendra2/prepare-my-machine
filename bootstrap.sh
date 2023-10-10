@@ -15,7 +15,7 @@ else
     sudo apt-get update
     sudo apt-get install -y git python3 python3-pip \
         apt-transport-https ca-certificates \
-        curl gnupg lsb-release
+        curl gnupg lsb-release python3.10-venv
     export PATH="$HOME/.local/bin/:$PATH"
     python3 -m pip install --user pipx
     python3 -m pipx ensurepath
