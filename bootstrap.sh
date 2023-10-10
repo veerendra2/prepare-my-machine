@@ -21,16 +21,19 @@ else
     python3 -m pipx ensurepath
 fi
 echo "[*] Install ansible"
-pipx install --include-deps ansible
+pip3 install jmespath ansible
 
-if [[ $(git remote get-url origin 2>/dev/null) != "https://github.com/veerendra2/prepare-my-machine.git" ]]; then
+if [[ $(basename `git rev-parse --show-toplevel`) != "prepare-my-machine" ]]; then
+    echo "in the if"
     mkdir -p ~/projects
     pushd ~/projects > /dev/null
     ssh-keyscan github.com >> ~/.ssh/known_hosts
-    git clone https://github.com/veerendra2/prepare-my-machine.git
+    if [ -d "prepare-my-machine" ]; then
+        git clone https://github.com/veerendra2/prepare-my-machine.git
+    fi
     pushd prepare-my-machine > /dev/null
 fi
-
+echo "Here"
 ansible-galaxy install --force -r requirements.yml
 echo "***************** Starting Ansible Playbook *****************"
 ansible-playbook main.yml
