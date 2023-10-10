@@ -8,7 +8,7 @@ echo "$CUR_USER ALL=(ALL) NOPASSWD:ALL" | sudo tee /etc/sudoers.d/custom
 
 if [ "$(uname -s)" == "Darwin" ]; then
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-    brew install python3
+    brew install python3 pipx
     curl https://bootstrap.pypa.io/get-pip.py | python3
 
 else
@@ -17,9 +17,11 @@ else
         apt-transport-https ca-certificates \
         curl gnupg lsb-release
     export PATH="$HOME/.local/bin/:$PATH"
+    python3 -m pip install --user pipx
+    python3 -m pipx ensurepath
 fi
 echo "[*] Install ansible"
-pip3 install jmespath ansible
+pipx install --include-deps ansible
 
 if [[ $(git remote get-url origin 2>/dev/null) != "https://github.com/veerendra2/prepare-my-machine.git" ]]; then
     mkdir -p ~/projects
