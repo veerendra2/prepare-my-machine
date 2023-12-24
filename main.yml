@@ -5,4 +5,6 @@
     - vars.yml
 
   roles:
-    - veerendra2.prepare_dev_setup
+    - role: veerendra2.prepare_dev_setup
+    - role: geerlingguy.docker
+      when: ansible_system == "Linux"

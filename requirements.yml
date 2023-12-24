@@ -1,3 +1,16 @@
 ---
 roles:
   - name: veerendra2.prepare_dev_setup
+    src: https://github.com/veerendra2/ansible-role-prepare_dev_setup.git
+  - name: geerlingguy.docker
+    src: https://github.com/geerlingguy/ansible-role-docker.git
+
+collections:
+  - name: https://github.com/ansible-collections/community.docker
+    type: git
+  - name: https://github.com/ansible-collections/community.general
+    type: git
+  - name: https://github.com/ansible-collections/community.crypto
+    type: git
+  - name: https://github.com/ansible-collections/ansible.posix
+    type: git

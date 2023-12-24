@@ -1,8 +1,10 @@
 ---
 git_projects:
   my-utils: https://github.com/veerendra2/my-utils.git
-  raspberrypi-homeserver: https://github.com/veerendra2/raspberrypi-homeserver.git
   ansible-role-prepare_dev_setup: https://github.com/veerendra2/ansible-role-prepare_dev_setup.git
-  greet-me-flask-app: https://github.com/veerendra2/greet-me-flask-app.git
   init-my-windows: https://github.com/veerendra2/init-my-windows.git
   sherlock: https://github.com/sherlock-project/sherlock.git
+
+public_keys_url: "https://github.com/veerendra2.keys"
+
+docker_compose_version: "v2.23.3"
