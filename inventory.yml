@@ -7,7 +7,6 @@ all:
       ansible_ssh_user: veerendra
       # ansible_ssh_password:
       extra_hosts:
-        # Wifi Address
-        - "atom:192.168.0.130"
+        - "atom:192.168.0.120"
   localhost:
     ansible_connection: local

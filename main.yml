@@ -7,4 +7,5 @@
   roles:
     - role: veerendra2.prepare_dev_setup
     - role: geerlingguy.docker
+      become: true
       when: ansible_system == "Linux"

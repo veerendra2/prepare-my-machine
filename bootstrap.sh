@@ -24,8 +24,10 @@ pip3 install jmespath ansible
 if [[ $(git remote get-url origin 2>/dev/null) != "https://github.com/veerendra2/prepare-my-machine.git" ]]; then
     mkdir -p ~/projects
     pushd ~/projects > /dev/null
-    ssh-keyscan github.com >> ~/.ssh/known_hosts
-    git clone https://github.com/veerendra2/prepare-my-machine.git
+    if [[ ! -d "${HOME}/projects/prepare-my-machine"  ]]; then
+        ssh-keyscan github.com >> ~/.ssh/known_hosts
+        git clone https://github.com/veerendra2/prepare-my-machine.git
+    fi
     pushd prepare-my-machine > /dev/null
 fi
 
