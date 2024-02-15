@@ -1,5 +1,5 @@
-![GitHub Repo stars](https://img.shields.io/github/stars/veerendra2/prepare-my-machine)
-![GitHub issues](https://img.shields.io/github/issues/veerendra2/prepare-my-machine)
+![GitHub Repo stars](https://img.shields.io/github/stars/veerendra2/prepare-my-machine?style=flat)
+![GitHub issues](https://img.shields.io/github/issues/veerendra2/prepare-my-machine?style=flat)
 
 # Prepare My Machine
 [IaC](https://en.wikipedia.org/wiki/Infrastructure_as_code) setup to install necessary packages and configure my Ubuntu(Or any Debian distro) and MacOS.
@@ -8,7 +8,9 @@
 
 | Used Ansible Roles |
 | ------------------ |
-| [<img alt="Ansible Galaxy Role Name" src="https://img.shields.io/ansible/role/63075">](https://galaxy.ansible.com/veerendra2/prepare_dev_setup) |
+| [<img src="https://img.shields.io/badge/Role-veerendra2.prepare_dev_setup-green?style=flat">](https://github.com/veerendra2/ansible-role-prepare_dev_setup) |
+| [<img src="https://img.shields.io/badge/Role-geerlingguy.docker-green?style=flat">](https://github.com/geerlingguy/ansible-role-docker) |
+
 
 ## Run
 > :information_source: For MacOS [Homebrew](https://brew.sh/) must be installed before running this playbook
@@ -21,7 +23,7 @@ curl https://raw.githubusercontent.com/veerendra2/prepare-my-machine/master/boot
 * [Configure bash(Homebrew) in iTerm for MacOS](https://github.com/veerendra2/dotfiles#configure-bashhomebrew-in-iterm-for-macos)
 
 ## Other repos
-| Repo |
+| Repos |
 | ---- |
 | https://github.com/veerendra2/init-my-windows <img src="https://user-images.githubusercontent.com/8393701/248329539-0b792b81-2d32-4ef9-b92e-0350ad472d61.png" alt="Windows" width="20"/> |
 | https://github.com/veerendra2/dotfiles :large_blue_circle: |
