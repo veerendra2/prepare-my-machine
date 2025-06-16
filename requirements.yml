@@ -2,8 +2,10 @@
 roles:
   - name: veerendra2.prepare_dev_setup
     src: https://github.com/veerendra2/ansible-role-prepare_dev_setup.git
+    version: main
   - name: geerlingguy.docker
     src: https://github.com/geerlingguy/ansible-role-docker.git
+    version: master
 
 collections:
   - name: https://github.com/ansible-collections/community.docker
